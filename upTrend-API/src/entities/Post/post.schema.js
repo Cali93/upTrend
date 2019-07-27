@@ -11,6 +11,7 @@ export default gql`
   }
 
   input CreatePostInput {
+    userId: Int!
     title: String!
     content: String!
     cover: String

@@ -15,7 +15,7 @@ import {
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
 import { GET_ALL_USERS, CREATE_USER } from '../../../graphql/users';
-import { GET_ALL_OFFICES } from '../../../graphql/offices';
+import { GET_ALL_POSTS } from '../../../graphql/posts';
 import { genders, roles } from '../../../utils/staticLists';
 
 const CreateUserDialog = ({ isOpen, toggleDialog }) => {
@@ -26,7 +26,6 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
     lastName: Yup.string().required('Last Name is required'),
     gender: Yup.string(),
     role: Yup.string().required('Role is required'),
-    officeId: Yup.number().required('Office ID is required'),
     avatar: Yup.string(),
     email: Yup.string()
       .email('Email is invalid')
@@ -75,7 +74,6 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
             <Formik
               initialValues={{
                 firstName: '',
-                officeId: null,
                 lastName: '',
                 role: '',
                 email: '',
@@ -133,48 +131,6 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
                       />
                     )}
                   />
-                  <Query query={GET_ALL_OFFICES}>
-                    {({ data: officesData, error, loading }) => {
-                      if (loading || !officesData.allOffices) {
-                        return <div />;
-                      }
-                      if (error) {
-                        return <div>Error...</div>;
-                      }
-                      return (
-                        <Field
-                          name='officeId'
-                          render={({ field, form }) => (
-                            <Select
-                              {...field}
-                              value={field.value || 0}
-                              style={{ margin: '17px 0' }}
-                              fullWidth
-                              variant='outlined'
-                              input={
-                                <OutlinedInput
-                                  name='officeId'
-                                  placeholder='Office'
-                                />
-                              }
-                            >
-                              <MenuItem
-                                key='select.office'
-                                value={0}
-                              >
-                                <em>Select an office</em>
-                              </MenuItem>
-                              {officesData.allOffices.offices.map(office => (
-                                <MenuItem key={office.id} value={office.id}>
-                                  {office.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          )}
-                        />
-                      );
-                    }}
-                  </Query>
                   <Field
                     name='role'
                     render={({ field, form }) => (

@@ -12,38 +12,38 @@ import Container from '@material-ui/core/Container';
 import SeeIcon from '@material-ui/icons/RemoveRedEye';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import { useOfficeStyles } from './office.styles';
-import { GET_ALL_OFFICES, DELETE_OFFICE } from '../../../graphql/offices';
+import { usePostStyles } from './post.styles';
+import { GET_ALL_POSTS, DELETE_POST } from '../../../graphql/posts';
 import ConfirmPopover from '../../common/ConfirmPopover/ConfirmPopover';
 import { Mutation } from 'react-apollo';
-import EditOfficeDialog from './EditOfficeDialog';
-import CreateOfficeDialog from './CreateOfficeDialog';
+import EditPostDialog from './EditPostDialog';
+import CreatePostDialog from './CreatePostDialog';
 import { useStoreState } from 'easy-peasy';
 
-const Offices = () => {
-  const classes = useOfficeStyles();
+const Posts = () => {
+  const classes = usePostStyles();
   const [isEditDialogOpen, setToggleEditDialog] = useState(false);
   const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
-  const [office, setOffice] = useState({
-    officeId: null,
-    name: '',
-    cover: '',
-    country: '',
-    emails: ''
+  const [post, setPost] = useState({
+    postId: null,
+    userId: null,
+    title: '',
+    content: '',
+    cover: ''
   });
-  const isAdmin = useStoreState(state => state.user.user.role === 'admin');
-  const { data, error, loading } = useQuery(GET_ALL_OFFICES);
+  const currentUser = useStoreState(state => state.user.user.id);
+  const { data, error, loading } = useQuery(GET_ALL_POSTS);
 
-  const handleEditOffice = (officeId, name, cover, country, emails) => {
-    setOffice({ officeId, name, cover, country, emails });
+  const handleEditPost = (postId, userId, title, content, cover) => {
+    setPost({ postId, userId, title, content, cover });
     setToggleEditDialog(prevState => !prevState);
   };
 
-  const handleCreateOffice = () => {
+  const handleCreatePost = () => {
     setToggleCreateDialog(prevState => !prevState);
   };
 
-  if (loading || !data.allOffices) {
+  if (loading || !data.allPosts) {
     return <div />;
   }
   if (error) {
@@ -61,7 +61,7 @@ const Offices = () => {
             color='textPrimary'
             gutterBottom
           >
-            Offices
+            Posts
           </Typography>
           <Typography
             variant='h5'
@@ -69,79 +69,79 @@ const Offices = () => {
             color='textSecondary'
             paragraph
           >
-            You can browse through all our offices accross the world.
+            You can browse through all our posts accross the world.
           </Typography>
-          {isAdmin && (
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify='center'>
-                <Grid item>
-                  <Button
-                    variant='contained'
-                    color='primary'
-                    onClick={handleCreateOffice}
-                  >
-                  Create an office
-                  </Button>
-                </Grid>
+          <div className={classes.heroButtons}>
+            <Grid container spacing={2} justify='center'>
+              <Grid item>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={handleCreatePost}
+                >
+                  Create an post
+                </Button>
               </Grid>
-            </div>
-          )}
+            </Grid>
+          </div>
         </Container>
       </div>
-      {isAdmin && isEditDialogOpen && (
-        <EditOfficeDialog
+      {isEditDialogOpen && (
+        <EditPostDialog
           isOpen={isEditDialogOpen}
           toggleDialog={() => setToggleEditDialog()}
-          office={office}
+          post={post}
         />
       )}
-      {isAdmin && isCreateDialogOpen && (
-        <CreateOfficeDialog
+      {isCreateDialogOpen && (
+        <CreatePostDialog
           isOpen={isCreateDialogOpen}
-          toggleDialog={handleCreateOffice}
+          toggleDialog={handleCreatePost}
         />
       )}
       <Container className={classes.cardGrid} maxWidth='md'>
         <Grid container spacing={4}>
-          {data.allOffices.offices.map(({ id, name, cover, country, emails }) => (
+          {data.allPosts.posts.map(({ id, userId, title, content, cover }) => (
             <Grid item key={id} xs={12} sm={6} md={4}>
               <Card className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}
                   image={cover}
-                  title={name}
+                  title={title}
                 />
                 <CardContent className={classes.cardContent}>
                   <Typography gutterBottom variant='h4' component='h3'>
-                    {name} - { country }
+                    {title}
                   </Typography>
-                  {emails.map(({ email, owner }) => email && (
-                    <Typography key={email}>
-                      {owner && `${owner} -` } {email}
-                    </Typography>
-                  ))}
+                  <Typography gutterBottom variant='body1'>
+                    {content.length > 200
+                      ? `${content.slice(0, 200)}...`
+                      : content
+                    }
+                  </Typography>
                 </CardContent>
-                {isAdmin && (
-                  <CardActions className={classes.cardActions}>
-                    <Button size='small' color='primary'>
-                      <SeeIcon color='primary' />
-                    </Button>
+                <CardActions className={classes.cardActions}>
+                  <Button size='small' color='primary'>
+                    <SeeIcon color='primary' />
+                  </Button>
+                  {userId === currentUser && (
+                  <>
                     <Button
                       size='small'
-                      onClick={() => handleEditOffice(id, name, cover, country, emails)}
+                      onClick={() => handleEditPost(id, userId, title, content, cover)}
                     >
                       <EditIcon color='secondary' />
                     </Button>
-                    <Mutation mutation={DELETE_OFFICE}>
-                      {deleteOffice => (
+                    <Mutation mutation={DELETE_POST}>
+                      {deletePost => (
                         <ConfirmPopover
-                          confirmAction='Delete office'
+                          confirmAction='Delete post'
                           onConfirmation={() =>
-                            deleteOffice({
+                            deletePost({
                               variables: {
-                                officeId: id
+                                postId: id
                               },
-                              refetchQueries: [{ query: GET_ALL_OFFICES }]
+                              refetchQueries: [{ query: GET_ALL_POSTS }]
                             })
                           }
                         >
@@ -149,8 +149,9 @@ const Offices = () => {
                         </ConfirmPopover>
                       )}
                     </Mutation>
-                  </CardActions>
-                )}
+                    </>
+                  )}
+                </CardActions>
               </Card>
             </Grid>
           ))}
@@ -160,4 +161,4 @@ const Offices = () => {
   );
 };
 
-export default Offices;
+export default Posts;

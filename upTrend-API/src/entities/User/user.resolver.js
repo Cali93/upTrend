@@ -33,17 +33,6 @@ export default {
       order: [
         ['firstName', 'ASC']
       ]
-    }),
-    allUsersByPostId: (parent, { postId }, { models }) => models.User.findAll({
-      where: {
-        post_id: {
-          [models.Op.eq]: postId
-        }
-      },
-      raw: true,
-      order: [
-        ['firstName', 'ASC']
-      ]
     })
   },
   Mutation: {

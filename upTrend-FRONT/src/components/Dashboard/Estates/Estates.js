@@ -13,7 +13,7 @@ import SeeIcon from '@material-ui/icons/RemoveRedEye';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { useEstateStyles } from './estate.styles';
-import { GET_ALL_ESTATES, DELETE_ESTATE, GET_ALL_ESTATES_BY_OFFICE } from '../../../graphql/estates';
+import { GET_ALL_ESTATES, DELETE_ESTATE, GET_ALL_ESTATES_BY_POST } from '../../../graphql/estates';
 import ConfirmPopover from '../../common/ConfirmPopover/ConfirmPopover';
 import { Mutation } from 'react-apollo';
 import EditEstateDialog from './EditEstateDialog';
@@ -24,24 +24,24 @@ const Estates = () => {
   const classes = useEstateStyles();
   const [isEditDialogOpen, setToggleEditDialog] = useState(false);
   const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
-  const [estate, setEstate] = useState({ estateId: null, name: '', cover: '', officeId: null });
-  const { role, officeId } = useStoreState(state => ({
+  const [estate, setEstate] = useState({ estateId: null, name: '', cover: '', postId: null });
+  const { role, postId } = useStoreState(state => ({
     role: state.user.user.role,
-    officeId: state.user.user.officeId
+    postId: state.user.user.postId
   }));
   const isAdmin = role === 'admin';
   const isNotBasicUser = role !== 'user';
-  const query = isAdmin ? GET_ALL_ESTATES : GET_ALL_ESTATES_BY_OFFICE;
+  const query = isAdmin ? GET_ALL_ESTATES : GET_ALL_ESTATES_BY_POST;
   const queryOptions = isAdmin ? {} : {
     variables: {
-      officeId
+      postId
     }
   };
   const { data, error, loading } = useQuery(query, queryOptions);
-  const estates = data.allEstates || data.allEstatesByOfficeId;
+  const estates = data.allEstates || data.allEstatesByPostId;
 
-  const handleEditEstate = (estateId, name, cover, estateOfficeId) => {
-    setEstate({ estateId, name, cover, officeId: estateOfficeId });
+  const handleEditEstate = (estateId, name, cover, estatePostId) => {
+    setEstate({ estateId, name, cover, postId: estatePostId });
     setToggleEditDialog(prevState => !prevState);
   };
 
@@ -110,7 +110,7 @@ const Estates = () => {
       )}
       <Container className={classes.cardGrid} maxWidth='md'>
         <Grid container spacing={4}>
-          {estates.map(({ id, name, cover, officeId: estateOfficeId }) => (
+          {estates.map(({ id, name, cover, postId: estatePostId }) => (
             <Grid item key={id} xs={12} sm={6} md={3}>
               <Card className={classes.card}>
                 <CardMedia
@@ -134,7 +134,7 @@ const Estates = () => {
                     </Button>
                     <Button
                       size='small'
-                      onClick={() => handleEditEstate(id, name, cover, estateOfficeId)}
+                      onClick={() => handleEditEstate(id, name, cover, estatePostId)}
                     >
                       <EditIcon color='secondary' />
                     </Button>
@@ -146,7 +146,7 @@ const Estates = () => {
                             const refetchQueriesByRole = role === 'admin' ? [
                               { query: GET_ALL_ESTATES }
                             ] : [
-                              { query: GET_ALL_ESTATES_BY_OFFICE, variables: { officeId } }
+                              { query: GET_ALL_ESTATES_BY_POST, variables: { postId } }
                             ];
                             return deleteEstate({
                               variables: {

@@ -1,55 +1,52 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import { Mutation } from 'react-apollo';
 import * as Yup from 'yup';
 import {
   Dialog,
   DialogContent,
   Typography,
-  Fade
+  Fade,
+  Button,
+  MenuItem,
+  OutlinedInput,
+  Select
 } from '@material-ui/core';
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { GET_ALL_ESTATES, CREATE_ESTATE, GET_ALL_ESTATES_BY_POST } from '../../../graphql/estates';
+import { GET_ALL_POSTS, CREATE_POST } from '../../../graphql/posts';
+import { countryList } from '../../../utils/staticLists';
 import { useStoreState } from 'easy-peasy';
 
-const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
+const CreatePostDialog = ({ isOpen, toggleDialog }) => {
   const [createError, setCreateError] = useState(false);
-  const { role, postId } = useStoreState(state => ({
-    postId: state.user.user.postId,
-    role: state.user.user.role
-  }));
+  const currentUser = useStoreState(state => state.user.user.id);
 
   const validateFields = Yup.object().shape({
-    name: Yup.string()
-      .required('Name is required'),
+    title: Yup.string()
+      .required('Title is required'),
+    content: Yup.string().required(),
     cover: Yup.string()
-      .required('Cover is required')
   });
 
-  const onSubmit = async (fields, form, createEstate) => {
-    if (createEstate) {
+  const onSubmit = async (fields, form, createPost) => {
+    if (createPost) {
       try {
-        const refetchQueriesByRole = role === 'admin' ? [
-          { query: GET_ALL_ESTATES }
-        ] : [
-          { query: GET_ALL_ESTATES_BY_POST, variables: { postId } }
-        ];
-        const createEstateResponse = await createEstate({
+        const createPostResponse = await createPost({
           variables: {
             input: {
-              ...fields,
-              postId
+              userId: currentUser,
+              ...fields
             }
           },
-          refetchQueries: refetchQueriesByRole
+          refetchQueries: [{ query: GET_ALL_POSTS }]
         });
-        const { data } = createEstateResponse;
-        const hasData = data && data.createEstate;
-        const isCreateOk = hasData && data.createEstate.ok;
+        const { data } = createPostResponse;
+        const hasData = data && data.createPost;
+        const isCreateOk = hasData && data.createPost.ok;
         const hasCreateErrors =
-          hasData && data.createEstate.errors && data.createEstate.errors.length > 0;
+          hasData && data.createPost.errors && data.createPost.errors.length > 0;
 
         if (hasCreateErrors || !isCreateOk) {
           return setCreateError(true);
@@ -68,37 +65,60 @@ const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
     <Dialog
       open={isOpen}
       onClose={toggleDialog}
-      aria-labelledby='form-dialog-title'
+      fullWidth
+      aria-labelledby='create-post-dialog-title'
     >
       <DialogContent>
-        <Mutation mutation={CREATE_ESTATE}>
-          {(createEstate, { loading }) => (
+        <Mutation mutation={CREATE_POST}>
+          {(createPost, { loading }) => (
             <Formik
               initialValues={{
-                name: '',
+                title: '',
+                content: '',
                 cover: ''
               }}
               validationSchema={validateFields}
-              onSubmit={(fields, form) => onSubmit(fields, form, createEstate)}
-              render={({ errors, touched, handleSubmit, handleReset }) => (
+              onSubmit={(fields, form) =>
+                onSubmit(fields, form, createPost)
+              }
+              render={({
+                errors,
+                touched,
+                handleSubmit,
+                handleReset,
+                values
+              }) => (
                 <Form onSubmit={handleSubmit}>
-                  <Typography variant='h3'>Create estate</Typography>
+                  <Typography variant='h3'>Create post</Typography>
                   {createError && (
                     <Fade in={createError}>
                       <Typography color='error'>
-                        Something went wrong while updating this estate :(
+                        Something went wrong while updating this post :(
                       </Typography>
                     </Fade>
                   )}
                   <Field
-                    name='name'
+                    name='title'
                     render={({ field, form }) => (
                       <TextFieldGroup
                         {...field}
                         form={form}
-                        name='name'
-                        label='Name'
-                        placeholder='Name'
+                        name='title'
+                        label='Title'
+                        placeholder='Title'
+                        required
+                      />
+                    )}
+                  />
+                  <Field
+                    name='content'
+                    render={({ field, form }) => (
+                      <TextFieldGroup
+                        {...field}
+                        form={form}
+                        name='content'
+                        label='Content'
+                        placeholder='Content'
                         required
                       />
                     )}
@@ -134,4 +154,4 @@ const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
   );
 };
 
-export default CreateEstateDialog;
+export default CreatePostDialog;

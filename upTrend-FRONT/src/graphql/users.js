@@ -8,22 +8,22 @@ export const GET_ALL_USERS = gql`
       lastName
       gender
       role
-      officeId
+      postId
       avatar
       email
     }
   }
 `;
 
-export const GET_ALL_USERS_BY_OFFICE = gql`
-  query($officeId: Int!) {
-    allUsersByOfficeId(officeId: $officeId) {
+export const GET_ALL_USERS_BY_POST = gql`
+  query($postId: Int!) {
+    allUsersByPostId(postId: $postId) {
       id
       firstName
       lastName
       gender
       role
-      officeId
+      postId
       avatar
       email
     }
@@ -51,7 +51,7 @@ export const UPDATE_USER = gql`
         lastName
         gender
         role
-        officeId
+        postId
         avatar
         email
       }

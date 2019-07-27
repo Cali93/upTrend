@@ -6,17 +6,17 @@ export const GET_ALL_ESTATES = gql`
       id
       name
       cover
-      officeId
+      postId
     }
   }
 `;
-export const GET_ALL_ESTATES_BY_OFFICE = gql`
-  query($officeId: Int!) {
-    allEstatesByOfficeId(officeId: $officeId) {
+export const GET_ALL_ESTATES_BY_POST = gql`
+  query($postId: Int!) {
+    allEstatesByPostId(postId: $postId) {
       id
       name
       cover
-      officeId
+      postId
     }
   }
 `;

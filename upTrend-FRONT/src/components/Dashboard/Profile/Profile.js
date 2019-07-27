@@ -57,7 +57,7 @@ const Profile = () => {
                 </Typography>
                 <Typography>{user.email && user.email}</Typography>
                 <Typography>
-                  {user.officeId && <span>Office ID: {user.officeId}</span>}
+                  {user.postId && <span>Post ID: {user.postId}</span>}
                 </Typography>
                 <Typography>
                   {user.role && <span>Permissions: {user.role}</span>}

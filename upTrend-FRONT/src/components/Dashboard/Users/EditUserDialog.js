@@ -15,47 +15,36 @@ import {
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { GET_ALL_USERS, UPDATE_USER, GET_ALL_USERS_BY_OFFICE } from '../../../graphql/users';
-import { GET_ALL_OFFICES } from '../../../graphql/offices';
+import { GET_ALL_USERS, UPDATE_USER, GET_ALL_USERS_BY_POST } from '../../../graphql/users';
+import { GET_ALL_POSTS } from '../../../graphql/posts';
 import { genders, roles } from '../../../utils/staticLists';
 import { GET_CURRENT_USER } from '../../../graphql/auth';
 
 const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
   const [editError, setEditError] = useState(false);
-  const { role, officeId } = useStoreState(state => ({
-    role: state.user.user.role,
-    officeId: state.user.user.officeId
-  }));
+  const role = useStoreState(state => state.user.user.role);
   const isAdmin = role === 'admin';
 
   const refetchQueryByRole = (role) => {
     const getCurrentUser = { query: GET_CURRENT_USER };
     const getAllUsers = { query: GET_ALL_USERS };
-    const getAllUsersByOffice = {
-      query: GET_ALL_USERS_BY_OFFICE,
-      variables: {
-        officeId
-      }
-    };
     switch (role) {
       case 'user':
         return [
           getCurrentUser
         ];
-      case 'manager':
-        return profileMode ? [
-          getAllUsersByOffice,
-          getCurrentUser
-        ] : [
-          getAllUsersByOffice
-        ];
-      case 'admin':
-        return profileMode ? [
-          getAllUsers,
-          getCurrentUser
-        ] : [
-          getAllUsers
-        ];
+      // case 'manager':
+      //   return profileMode ? [
+      //     getCurrentUser
+      //   ] : [
+      //   ];
+      // case 'admin':
+      //   return profileMode ? [
+      //     getAllUsers,
+      //     getCurrentUser
+      //   ] : [
+      //     getAllUsers
+      //   ];
       default:
         return [
           getCurrentUser
@@ -68,7 +57,6 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
     lastName: Yup.string().required('Last Name is required'),
     gender: Yup.string(),
     role: Yup.string().required('Role is required'),
-    officeId: Yup.number().required('Office ID is required'),
     avatar: Yup.string(),
     email: Yup.string()
       .email('Email is invalid')
@@ -171,49 +159,6 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
                   />
                   { isAdmin && (
                     <>
-                      <Query query={GET_ALL_OFFICES}>
-                        {({ data: officesData, error, loading }) => {
-                          if (loading || !officesData.allOffices) {
-                            return <div />;
-                          }
-                          if (error) {
-                            return <div>Error...</div>;
-                          }
-                          return (
-                            <Field
-                              name='officeId'
-                              render={({ field, form }) => (
-                                <Select
-                                  {...field}
-                                  value={field.value || 0}
-                                  style={{ margin: '17px 0' }}
-                                  fullWidth
-                                  required
-                                  variant='outlined'
-                                  input={
-                                    <OutlinedInput
-                                      name='officeId'
-                                      placeholder='Office'
-                                    />
-                                  }
-                                >
-                                  <MenuItem
-                                    key='select.office'
-                                    value={0}
-                                  >
-                                    <em>Select an office</em>
-                                  </MenuItem>
-                                  {officesData.allOffices.offices.map(office => (
-                                    <MenuItem key={office.id} value={office.id}>
-                                      {office.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              )}
-                            />
-                          );
-                        }}
-                      </Query>
                       <Field
                         name='role'
                         render={({ field, form }) => (

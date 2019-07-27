@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-export const useOfficeStyles = makeStyles(theme => ({
+export const usePostStyles = makeStyles(theme => ({
   icon: {
     marginRight: theme.spacing(2)
   },

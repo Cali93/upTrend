@@ -13,7 +13,7 @@ import SeeIcon from '@material-ui/icons/RemoveRedEye';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { useUserStyles } from './user.styles';
-import { GET_ALL_USERS, DELETE_USER, GET_ALL_USERS_BY_OFFICE } from '../../../graphql/users';
+import { GET_ALL_USERS, DELETE_USER, GET_ALL_USERS_BY_POST } from '../../../graphql/users';
 import ConfirmPopover from '../../common/ConfirmPopover/ConfirmPopover';
 import { Mutation } from 'react-apollo';
 import EditUserDialog from './EditUserDialog';
@@ -27,7 +27,7 @@ const Users = () => {
   const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
   const [user, setUser] = useState({
     userId: null,
-    officeId: null,
+    postId: null,
     firstName: '',
     lastName: '',
     email: '',
@@ -35,20 +35,9 @@ const Users = () => {
     gender: ''
   });
 
-  const { role, officeId } = useStoreState(state => ({
-    role: state.user.user.role,
-    officeId: state.user.user.officeId
-  }));
-  const isAdmin = role === 'admin';
-  const isNotBasicUser = role !== 'user';
-  const query = isAdmin ? GET_ALL_USERS : GET_ALL_USERS_BY_OFFICE;
-  const queryOptions = isAdmin ? {} : {
-    variables: {
-      officeId
-    }
-  };
-  const { data, error, loading } = useQuery(query, queryOptions);
-  const users = data.allUsers || data.allUsersByOfficeId;
+  const isAdmin = useStoreState(state => state.user.user.role === 'admin');
+  const { data, error, loading } = useQuery(GET_ALL_USERS);
+  const users = data.allUsers;
 
   const handleEditUser = (user) => {
     const { __typename, ...userFields } = user;
@@ -88,7 +77,7 @@ const Users = () => {
           >
             You can browse through all the users.
           </Typography>
-          {isNotBasicUser && (
+          {isAdmin && (
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify='center'>
                 <Grid item>
@@ -105,13 +94,13 @@ const Users = () => {
           )}
         </Container>
       </div>
-      {isNotBasicUser && isCreateDialogOpen && (
+      {isAdmin && isCreateDialogOpen && (
         <CreateUserDialog
           isOpen={isCreateDialogOpen}
           toggleDialog={handleCreateUser}
         />
       )}
-      {isNotBasicUser && isEditDialogOpen && (
+      {isAdmin && isEditDialogOpen && (
         <EditUserDialog
           isOpen={isEditDialogOpen}
           toggleDialog={() => setToggleEditDialog()}
@@ -138,13 +127,10 @@ const Users = () => {
                   </Typography>
                   <Typography>{user.email && user.email}</Typography>
                   <Typography>
-                    {user.officeId && <span>Office ID: {user.officeId}</span>}
-                  </Typography>
-                  <Typography>
                     {user.role && <span>Permissions: {user.role}</span>}
                   </Typography>
                 </CardContent>
-                {isNotBasicUser && (
+                {isAdmin && (
                   <CardActions className={classes.cardActions}>
                     <Button size='small' color='primary'>
                       <SeeIcon color='primary' />
@@ -157,20 +143,11 @@ const Users = () => {
                         <ConfirmPopover
                           confirmAction='Delete user'
                           onConfirmation={() => {
-                            const refetchQueriesByRole =
-                              role === 'admin'
-                                ? [{ query: GET_ALL_USERS }]
-                                : [
-                                  {
-                                    query: GET_ALL_USERS_BY_OFFICE,
-                                    variables: { officeId }
-                                  }
-                                ];
                             return deleteUser({
                               variables: {
                                 id: user.id
                               },
-                              refetchQueries: refetchQueriesByRole
+                              refetchQueries: [{ query: GET_ALL_USERS }]
                             });
                           }}
                         >

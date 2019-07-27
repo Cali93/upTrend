@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Estates from './Estates/Estates';
 import Profile from './Profile/Profile';
-import Offices from './Offices/Offices';
+import Posts from './Posts/Posts';
 import Users from './Users/Users';
 import Sidebar from '../Layout/Sidebar/Sidebar';
 import TopToolbar from '../Layout/TopToolbar/TopToolbar';
@@ -27,8 +27,7 @@ const Dashboard = () => {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Switch>
-            <PrivateRoute exact path='/app/estates' component={Estates} />
-            <PrivateRoute exact path='/app/offices' component={Offices} />
+            <PrivateRoute exact path='/app/posts' component={Posts} />
             <PrivateRoute exact path='/app/users' component={Users} />
             <PrivateRoute exact path='/app/profile' component={Profile} />
           </Switch>

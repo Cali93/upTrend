@@ -7,7 +7,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EstatesIcon from '@material-ui/icons/AccountBalance';
 import PeopleIcon from '@material-ui/icons/People';
-import OfficesIcon from '@material-ui/icons/Domain';
+import PostsIcon from '@material-ui/icons/Domain';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { resetLinkStyle } from '../../../utils/styles';
 
@@ -23,12 +23,12 @@ export const MainNavItems = withRouter(({ history, match }) => {
           <ListItemText primary='Estates' />
         </ListItem>
       </Link>
-      <Link style={resetLinkStyle} to='/app/offices'>
-        <ListItem button selected={isActive('/app/offices')}>
+      <Link style={resetLinkStyle} to='/app/posts'>
+        <ListItem button selected={isActive('/app/posts')}>
           <ListItemIcon>
-            <OfficesIcon />
+            <PostsIcon />
           </ListItemIcon>
-          <ListItemText primary='Offices' />
+          <ListItemText primary='Posts' />
         </ListItem>
       </Link>
       <Link style={resetLinkStyle} to='/app/users'>

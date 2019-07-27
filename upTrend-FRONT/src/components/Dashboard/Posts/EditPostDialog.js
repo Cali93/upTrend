@@ -15,10 +15,10 @@ import {
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { GET_ALL_OFFICES, UPDATE_OFFICE } from '../../../graphql/offices';
+import { GET_ALL_POSTS, UPDATE_POST } from '../../../graphql/posts';
 import { countryList } from '../../../utils/staticLists';
 
-const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
+const EditPostDialog = ({ isOpen, toggleDialog, post }) => {
   const [editError, setEditError] = useState(false);
   const validateFields = Yup.object().shape({
     name: Yup.string()
@@ -31,23 +31,23 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
     }))
   });
 
-  const onSubmit = async (fields, form, updateOffice) => {
-    if (updateOffice) {
+  const onSubmit = async (fields, form, updatePost) => {
+    if (updatePost) {
       try {
-        const updateOfficeResponse = await updateOffice({
+        const updatePostResponse = await updatePost({
           variables: {
             input: {
               ...fields,
               emails: fields.emails.map(({ owner, email }) => ({ owner, email }))
             }
           },
-          refetchQueries: [{ query: GET_ALL_OFFICES }]
+          refetchQueries: [{ query: GET_ALL_POSTS }]
         });
-        const { data } = updateOfficeResponse;
-        const hasData = data && data.updateOffice;
-        const isEditOk = hasData && data.updateOffice.ok;
+        const { data } = updatePostResponse;
+        const hasData = data && data.updatePost;
+        const isEditOk = hasData && data.updatePost.ok;
         const hasEditErrors =
-          hasData && data.updateOffice.errors && data.updateOffice.errors.length > 0;
+          hasData && data.updatePost.errors && data.updatePost.errors.length > 0;
 
         if (hasEditErrors || !isEditOk) {
           return setEditError(true);
@@ -69,13 +69,13 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
       aria-labelledby='form-dialog-title'
     >
       <DialogContent>
-        <Mutation mutation={UPDATE_OFFICE}>
-          {(updateOffice, { loading }) => (
+        <Mutation mutation={UPDATE_POST}>
+          {(updatePost, { loading }) => (
             <Formik
-              initialValues={office}
+              initialValues={post}
               validationSchema={validateFields}
               onSubmit={(fields, form) =>
-                onSubmit(fields, form, updateOffice)
+                onSubmit(fields, form, updatePost)
               }
               render={({
                 errors,
@@ -86,11 +86,11 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
               }) => {
                 return (
                   <Form onSubmit={handleSubmit}>
-                    <Typography variant='h3'>Edit office</Typography>
+                    <Typography variant='h3'>Edit post</Typography>
                     {editError && (
                       <Fade in={editError}>
                         <Typography color='error'>
-                          Something went wrong while updating this office :(
+                          Something went wrong while updating this post :(
                         </Typography>
                       </Fade>
                     )}
@@ -155,7 +155,7 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
                             variant='h6'
                             style={{ marginTop: '20px' }}
                           >
-                            Office emails
+                            Post emails
                           </Typography>
                           {values.emails.map((email, index) => {
                             return (
@@ -227,4 +227,4 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
   );
 };
 
-export default EditOfficeDialog;
+export default EditPostDialog;

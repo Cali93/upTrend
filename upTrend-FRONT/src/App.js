@@ -25,7 +25,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path='/authenticate' component={Auth} />
-        <Route exact path='/' render={() => <Redirect to='/app/estates' />} />
+        <Route exact path='/' render={() => <Redirect to='/app/posts' />} />
         <PrivateRoute path='/app' component={Dashboard} />
         <Route component={Error404} />
       </Switch>

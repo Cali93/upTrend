@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field, FieldArray } from 'formik';
 import { Mutation } from 'react-apollo';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { useStoreState } from 'easy-peasy';
+
 import {
   Dialog,
   DialogContent,
   Typography,
-  Fade,
-  Button,
-  MenuItem,
-  OutlinedInput,
-  Select
+  Fade
 } from '@material-ui/core';
 
-import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
-import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { GET_ALL_POSTS, CREATE_POST } from '../../../graphql/posts';
-import { countryList } from '../../../utils/staticLists';
-import { useStoreState } from 'easy-peasy';
+import { DialogTitle } from '../../../common/Dialog/DialogTitle/DialogTitle';
+import { TextFieldGroup } from '../../../common/TextFieldGroup/TextFieldGroup';
+import SubmitOrCancel from '../../../common/SubmitOrCancel/SubmitOrCancel';
+import { GET_ALL_POSTS } from '../../../../graphql/posts';
 
-const CreatePostDialog = ({ isOpen, toggleDialog }) => {
-  const [createError, setCreateError] = useState(false);
+const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode }) => {
+  const [mutationError, setMutationError] = useState(false);
   const currentUser = useStoreState(state => state.user.user.id);
 
   const validateFields = Yup.object().shape({
@@ -30,10 +27,11 @@ const CreatePostDialog = ({ isOpen, toggleDialog }) => {
     cover: Yup.string()
   });
 
-  const onSubmit = async (fields, form, createPost) => {
-    if (createPost) {
+  const onSubmit = async (fields, form, mutatePost) => {
+    const createOrEditPost = mode === 'edit' ? 'updatePost' : 'createPost';
+    if (mutatePost) {
       try {
-        const createPostResponse = await createPost({
+        const mutatePostResponse = await mutatePost({
           variables: {
             input: {
               userId: currentUser,
@@ -42,22 +40,22 @@ const CreatePostDialog = ({ isOpen, toggleDialog }) => {
           },
           refetchQueries: [{ query: GET_ALL_POSTS }]
         });
-        const { data } = createPostResponse;
-        const hasData = data && data.createPost;
-        const isCreateOk = hasData && data.createPost.ok;
-        const hasCreateErrors =
-          hasData && data.createPost.errors && data.createPost.errors.length > 0;
+        const { data } = mutatePostResponse;
+        const hasData = data && data[createOrEditPost];
+        const isMutationOk = hasData && data[createOrEditPost].ok;
+        const hasMutationErrors =
+          hasData && data[createOrEditPost].errors && data[createOrEditPost].errors.length > 0;
 
-        if (hasCreateErrors || !isCreateOk) {
-          return setCreateError(true);
+        if (hasMutationErrors || !isMutationOk) {
+          return setMutationError(true);
         }
 
-        if (isCreateOk) {
+        if (isMutationOk) {
           form.resetForm();
           return true;
         }
       } catch (err) {
-        return setCreateError(true);
+        return setMutationError(true);
       }
     }
   };
@@ -66,21 +64,18 @@ const CreatePostDialog = ({ isOpen, toggleDialog }) => {
       open={isOpen}
       onClose={toggleDialog}
       fullWidth
-      aria-labelledby='create-post-dialog-title'
+      aria-labelledby='post-dialog-title'
     >
-      <DialogContent>
-        <Mutation mutation={CREATE_POST}>
-          {(createPost, { loading }) => (
+      <DialogTitle id='post-dialog-title' onClose={toggleDialog}>
+        {mode} post
+      </DialogTitle>
+      <DialogContent dividers>
+        <Mutation mutation={mutation}>
+          {(mutate, { loading }) => (
             <Formik
-              initialValues={{
-                title: '',
-                content: '',
-                cover: ''
-              }}
+              initialValues={initialValues}
               validationSchema={validateFields}
-              onSubmit={(fields, form) =>
-                onSubmit(fields, form, createPost)
-              }
+              onSubmit={(fields, form) => onSubmit(fields, form, mutate)}
               render={({
                 errors,
                 touched,
@@ -89,11 +84,10 @@ const CreatePostDialog = ({ isOpen, toggleDialog }) => {
                 values
               }) => (
                 <Form onSubmit={handleSubmit}>
-                  <Typography variant='h3'>Create post</Typography>
-                  {createError && (
-                    <Fade in={createError}>
+                  {mutationError && (
+                    <Fade in={mutationError}>
                       <Typography color='error'>
-                        Something went wrong while updating this post :(
+                        Something went wrong while saving this post :(
                       </Typography>
                     </Fade>
                   )}
@@ -154,4 +148,8 @@ const CreatePostDialog = ({ isOpen, toggleDialog }) => {
   );
 };
 
-export default CreatePostDialog;
+PostFormDialog.defaultProps = {
+  mode: 'create'
+};
+
+export default PostFormDialog;

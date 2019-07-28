@@ -4,6 +4,8 @@ export default (db, DataTypes) => {
     {
       title:
         DataTypes.STRING,
+      category:
+        DataTypes.STRING,
       content:
         DataTypes.TEXT,
       cover:

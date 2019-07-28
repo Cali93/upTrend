@@ -1,26 +1,11 @@
-import Sequelize from 'sequelize';
 import { or, and, rule, shield } from 'graphql-shield';
-const { Op } = Sequelize;
 
 const isAuthenticated = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
-      where: { id: { [Op.eq]: req.session.userId } },
+      where: { id: { [models.Op.eq]: req.session.userId } },
       raw: true
     }).then(user => !!user.id);
-  }
-});
-
-const isAdminOrManager = rule()(async (parent, args, { models, req }, info) => {
-  if (req.session && req.session.userId) {
-    return models.User.scope('withoutPassword').findOne({
-      where: {
-        id: { [Op.eq]: req.session.userId }
-      },
-      raw: true
-    }).then(({ role }) => role === 'admin' || role === 'manager');
-  } else {
-    return false;
   }
 });
 
@@ -28,8 +13,8 @@ const isAdmin = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
       where: {
-        id: { [Op.eq]: req.session.userId },
-        role: { [Op.eq]: 'admin' }
+        id: { [models.Op.eq]: req.session.userId },
+        role: { [models.Op.eq]: 'admin' }
       },
       raw: true
     }).then(({ role }) => role === 'admin');
@@ -38,61 +23,17 @@ const isAdmin = rule()(async (parent, args, { models, req }, info) => {
   }
 });
 
-const isManager = rule()(async (parent, args, { models, req }, info) => {
+const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
-    return models.User.scope('withoutPassword').findOne({
+    return models.Post.findOne({
       where: {
-        id: { [Op.eq]: req.session.userId },
-        role: { [Op.eq]: 'manager' }
+        id: { [models.Op.eq]: args.input.postId },
+        userId: { [models.Op.eq]: req.session.userId }
       },
       raw: true
-    }).then(({ role }) => role === 'manager');
-  } else {
-    return false;
-  }
-});
-
-const isAdminOrOwner = rule()(async (parent, args, { models, req }, info) => {
-  if (req.session && req.session.userId) {
-    return models.User.scope('withoutPassword').findOne({
-      where: {
-        id: { [Op.eq]: req.session.userId }
-      },
-      raw: true
-    }).then(user =>
-      user.role === 'admin' ||
-      args.input.userId === req.session.userId
+    }).then(post =>
+      post.id === args.input.postId
     );
-  } else {
-    return false;
-  }
-});
-
-const userbelongsToSamePost = rule()(async (parent, args, { models, req }, info) => {
-  if (req.session && req.session.userId) {
-    return models.User.scope('withoutPassword').findAll({
-      where: {
-        id: { [Op.or]: [args.input.userId, req.session.userId] }
-      },
-      raw: true
-    }).then(async users =>
-      users.reduce((userA, userB) =>
-        userA.postId === userB.postId
-      ));
-  } else {
-    return false;
-  }
-});
-
-const estatebelongsToSamePost = rule()(async (parent, args, { models, req }, info) => {
-  if (req.session && req.session.userId) {
-    return models.User.scope('withoutPassword').findOne({
-      where: {
-        id: req.session.userId,
-        postId: { [Op.eq]: args.input.postId }
-      },
-      raw: true
-    }).then(user => !!user.id);
   } else {
     return false;
   }
@@ -111,8 +52,8 @@ export const permissions = shield({
     // createEstate: isAdminOrManager,
     // updateEstate: or(isAdmin, and(isManager, estatebelongsToSamePost)),
     // deleteEstate: or(isAdmin, and(isManager, estatebelongsToSamePost)),
-    // createPost: isAdmin,
-    // updatePost: isAdmin,
+    createPost: isAuthenticated,
+    updatePost: isPostOwner
     // deletePost: isAdmin,
     // createUser: isAdminOrManager,
     // updateUser: or(isAdminOrOwner, and(isManager, userbelongsToSamePost)),

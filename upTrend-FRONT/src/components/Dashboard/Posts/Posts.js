@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { useQuery } from 'react-apollo-hooks';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,19 +11,14 @@ import { GET_ALL_POSTS, CREATE_POST } from '../../../graphql/posts';
 import PostItem from './PostItem';
 import PostFormDialog from './PostForm/PostFormDialog';
 import HeroContainer from '../../common/HeroContainer/HeroContainer';
+import useToggle from '../../../hooks/useToggle';
+import PostList from './PostList';
 
 const Posts = () => {
   const classes = usePostStyles();
-  const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
+  const { isOpen: isCreateDialogOpen, handleToggle: setToggleCreateDialog } = useToggle();
 
   const { data, error, loading } = useQuery(GET_ALL_POSTS);
-
-  const handleCreatePost = useCallback(
-    () => {
-      setToggleCreateDialog(prevState => !prevState);
-    },
-    []
-  );
 
   if (loading || !data.allPosts) {
     return <div />;
@@ -42,7 +37,7 @@ const Posts = () => {
             <Button
               variant='contained'
               color='primary'
-              onClick={handleCreatePost}
+              onClick={setToggleCreateDialog}
             >
               Create a post
             </Button>
@@ -58,14 +53,12 @@ const Posts = () => {
           }}
           mutation={CREATE_POST}
           isOpen={isCreateDialogOpen}
-          toggleDialog={handleCreatePost}
+          toggleDialog={setToggleCreateDialog}
         />
       )}
       <Container className={classes.cardGrid} maxWidth='lg'>
         <Grid container spacing={4}>
-          {data.allPosts.posts.map(({ __typename, ...postProps }) => (
-            <PostItem key={postProps.id} {...postProps} />
-          ))}
+          <PostList posts={data.allPosts.posts} />
         </Grid>
       </Container>
     </>

@@ -40,9 +40,9 @@ export default {
         };
       }
     },
-    createPost: async (parent, { input }, { models }) => {
+    createPost: async (parent, { input }, { models, req }) => {
       try {
-        await models.Post.create(input);
+        await models.Post.create({ userId: req.session.userId, ...input });
         return {
           ok: true
         };

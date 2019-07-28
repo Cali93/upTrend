@@ -5,9 +5,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import SettingsIcon from '@material-ui/icons/Settings';
-import EstatesIcon from '@material-ui/icons/AccountBalance';
+import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import PeopleIcon from '@material-ui/icons/People';
-import PostsIcon from '@material-ui/icons/Domain';
+import PostsIcon from '@material-ui/icons/LibraryBooks';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { resetLinkStyle } from '../../../utils/styles';
 
@@ -15,20 +15,20 @@ export const MainNavItems = withRouter(({ history, match }) => {
   const isActive = (path) => history.location.pathname.includes(path);
   return (
     <>
-      <Link style={resetLinkStyle} to='/app/estates'>
-        <ListItem button selected={isActive('/app/estates')}>
-          <ListItemIcon>
-            <EstatesIcon />
-          </ListItemIcon>
-          <ListItemText primary='Estates' />
-        </ListItem>
-      </Link>
       <Link style={resetLinkStyle} to='/app/posts'>
         <ListItem button selected={isActive('/app/posts')}>
           <ListItemIcon>
             <PostsIcon />
           </ListItemIcon>
           <ListItemText primary='Posts' />
+        </ListItem>
+      </Link>
+      <Link style={resetLinkStyle} to='/app/bookmarks'>
+        <ListItem button selected={isActive('/app/bookmarks')}>
+          <ListItemIcon>
+            <BookmarksIcon />
+          </ListItemIcon>
+          <ListItemText primary='Bookmarks' />
         </ListItem>
       </Link>
       <Link style={resetLinkStyle} to='/app/users'>

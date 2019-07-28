@@ -10,3 +10,8 @@ export const renderGender = (gender) => {
       return '';
   }
 };
+
+export const sliceContent = (content, limit) =>
+  content.length > limit
+    ? `${content.slice(0, limit)}...`
+    : content;

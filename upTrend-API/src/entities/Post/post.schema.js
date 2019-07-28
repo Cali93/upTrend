@@ -5,14 +5,15 @@ export default gql`
   type Post {
     id: Int!
     title: String!
+    category: String!
     content: String!
     cover: String
     userId: Int!
   }
 
   input CreatePostInput {
-    userId: Int!
     title: String!
+    category: String!
     content: String!
     cover: String
   }
@@ -20,6 +21,7 @@ export default gql`
   input UpdatePostInput {
     postId: Int!
     title: String
+    category: String
     content: String
     cover: String
   }

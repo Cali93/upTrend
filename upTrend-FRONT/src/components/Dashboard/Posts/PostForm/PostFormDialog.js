@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { useStoreState } from 'easy-peasy';
 
 import {
   Dialog,
@@ -18,7 +17,6 @@ import { GET_ALL_POSTS } from '../../../../graphql/posts';
 
 const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode }) => {
   const [mutationError, setMutationError] = useState(false);
-  const currentUser = useStoreState(state => state.user.user.id);
 
   const validateFields = Yup.object().shape({
     title: Yup.string()
@@ -34,7 +32,6 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
         const mutatePostResponse = await mutatePost({
           variables: {
             input: {
-              userId: currentUser,
               ...fields
             }
           },
@@ -44,7 +41,9 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
         const hasData = data && data[createOrEditPost];
         const isMutationOk = hasData && data[createOrEditPost].ok;
         const hasMutationErrors =
-          hasData && data[createOrEditPost].errors && data[createOrEditPost].errors.length > 0;
+          hasData &&
+          data[createOrEditPost].errors &&
+          data[createOrEditPost].errors.length > 0;
 
         if (hasMutationErrors || !isMutationOk) {
           return setMutationError(true);
@@ -52,7 +51,7 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
 
         if (isMutationOk) {
           form.resetForm();
-          return true;
+          return toggleDialog();
         }
       } catch (err) {
         return setMutationError(true);
@@ -134,9 +133,7 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
                     onSubmit={onSubmit}
                     errors={errors}
                     loading={loading}
-                    resetForm={() => {
-                      return handleReset();
-                    }}
+                    resetForm={handleReset}
                   />
                 </Form>
               )}

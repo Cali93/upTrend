@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { useStoreActions } from 'easy-peasy';
 import { useQuery } from 'react-apollo-hooks';
 
-import Auth from './components/Auth/Auth';
-import Dashboard from './components/Dashboard/Dashboard';
-import Error404 from './components/Error/Error404';
-import { PrivateRoute } from './components/common/PrivateRoute/PrivateRoute';
-import { GET_CURRENT_USER } from './graphql/auth';
+import { GET_CURRENT_USER } from 'graphql/auth';
+import { PrivateRoute } from 'utils/HOCs/PrivateRoute/PrivateRoute';
+import Auth from 'components/pages/Auth/Auth';
+import Dashboard from 'components/pages/Dashboard/Dashboard';
+import Error404 from 'components/pages/Error/Error404';
 
 const App = () => {
   const setUser = useStoreActions(actions => actions.user.setUser);

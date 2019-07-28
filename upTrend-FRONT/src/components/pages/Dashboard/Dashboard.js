@@ -1,0 +1,41 @@
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import Sidebar from 'components/organisms/Sidebar/Sidebar';
+import TopToolbar from 'components/organisms/TopToolbar/TopToolbar';
+import { PrivateRoute } from 'utils/HOCs/PrivateRoute/PrivateRoute';
+
+import Estates from './Estates/Estates';
+import Profile from './Profile/Profile';
+import Posts from './Posts/Posts';
+import Users from './Users/Users';
+import { useDashboardStyles } from './dashboard.styles';
+
+const Dashboard = () => {
+  const classes = useDashboardStyles();
+  const [isOpen, setToggleDrawer] = useState(true);
+  const handleToggleDrawer = () => {
+    setToggleDrawer(prevState => !prevState);
+  };
+
+  return (
+    <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <TopToolbar isOpen={isOpen} handleToggleDrawer={handleToggleDrawer} classes={classes} />
+        <Sidebar isOpen={isOpen} handleToggleDrawer={handleToggleDrawer} classes={classes} />
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Switch>
+            <PrivateRoute exact path='/app/posts' component={Posts} />
+            <PrivateRoute exact path='/app/users' component={Users} />
+            <PrivateRoute exact path='/app/profile' component={Profile} />
+          </Switch>
+        </main>
+      </div>
+    </Router>
+  );
+};
+
+export default Dashboard;

@@ -6,6 +6,7 @@ export const GET_ALL_POSTS = gql`
       posts {
         id
         title
+        category
         content
         cover
         userId

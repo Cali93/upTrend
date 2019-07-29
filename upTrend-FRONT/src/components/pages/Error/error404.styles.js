@@ -1,4 +1,6 @@
-export const styles = theme => ({
+import { makeStyles } from '@material-ui/core';
+
+export const useError404Styles = makeStyles(theme => ({
   container: {
     height: '100vh',
     width: '100vw',
@@ -56,4 +58,4 @@ export const styles = theme => ({
     textTransform: 'none',
     fontSize: 22
   }
-});
+}));

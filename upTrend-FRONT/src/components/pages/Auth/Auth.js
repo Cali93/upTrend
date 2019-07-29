@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import {
   Grid,
   Typography,
-  withStyles,
   Tabs,
   Tab
 } from '@material-ui/core';
 
-import Login from './Login';
-import { Register } from './Register';
-import { styles } from './auth.styles';
 import logo from 'assets/logo.png';
 
-const Auth = ({ classes }) => {
+import Login from './Login';
+import { Register } from './Register';
+import { useAuthStyles } from './auth.styles';
+
+const Auth = () => {
+  const classes = useAuthStyles();
   const [activeTabId, setActiveTabId] = useState(0);
   const handleTabChange = (_e, tabId) => setActiveTabId(tabId);
 
@@ -46,4 +47,4 @@ const Auth = ({ classes }) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(Auth);
+export default Auth;

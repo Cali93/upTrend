@@ -18,7 +18,7 @@ import DeleteButton from 'components/molecules/DeleteButton/DeleteButton';
 import PostFormDialog from '../../templates/PostForm/PostFormDialog';
 import { usePostStyles } from './post.styles';
 
-const PostItem = ({ id, userId, title, content, cover }) => {
+const PostItem = ({ id, userId, title, category, content, cover }) => {
   const classes = usePostStyles();
   const currentUser = useStoreState(state => state.user.user.id);
   const { isOpen: isEditDialogOpen, handleToggle: setToggleEditDialog } = useToggle();
@@ -27,12 +27,13 @@ const PostItem = ({ id, userId, title, content, cover }) => {
   const [post, setPost] = useState({
     postId: null,
     title: '',
+    category: '',
     content: '',
     cover: ''
   });
 
-  const handleEditPost = (postId, title, content, cover) => {
-    setPost({ postId, title, content, cover });
+  const handleEditPost = (postId, title, category, content, cover) => {
+    setPost({ postId, title, category, content, cover });
     setToggleEditDialog();
   };
 
@@ -55,6 +56,20 @@ const PostItem = ({ id, userId, title, content, cover }) => {
       )}
       <Grid item key={id} xs={12} sm={6} md={4}>
         <Card className={classes.card}>
+          <CardMedia
+            className={classes.cardCategoryBanner}
+            image={`https://source.unsplash.com/random/?${category}`}
+            children={
+              <Typography
+                className={classes.cardCategoryBannerText}
+                gutterBottom
+                variant='h4'
+                component='h3'
+              >
+                {category}
+              </Typography>
+            }
+          />
           <CardMedia
             className={classes.cardMedia}
             image={cover}
@@ -81,7 +96,7 @@ const PostItem = ({ id, userId, title, content, cover }) => {
                 <Button
                   size='small'
                   onClick={() =>
-                    handleEditPost(id, title, content, cover)
+                    handleEditPost(id, title, category, content, cover)
                   }
                 >
                   <EditIcon color='secondary' />

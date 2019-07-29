@@ -9,7 +9,6 @@ import Container from '@material-ui/core/Container';
 import { GET_ALL_POSTS, CREATE_POST } from 'graphql/posts';
 import useToggle from 'utils/hooks/useToggle';
 import { usePostStyles } from 'components/organisms/PostItem/post.styles';
-import PostItem from 'components/organisms/PostItem/PostItem';
 import PostFormDialog from 'components/templates/PostForm/PostFormDialog';
 import HeroContainer from 'components/templates/HeroContainer/HeroContainer';
 

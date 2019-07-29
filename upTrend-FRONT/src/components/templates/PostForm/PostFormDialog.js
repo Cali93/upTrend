@@ -7,13 +7,17 @@ import {
   Dialog,
   DialogContent,
   Typography,
-  Fade
+  Fade,
+  Select,
+  OutlinedInput,
+  MenuItem
 } from '@material-ui/core';
 
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from 'components/organisms/SubmitOrCancel/SubmitOrCancel';
 import { GET_ALL_POSTS } from 'graphql/posts';
 import { DialogTitle } from 'components/templates/DialogTitle/DialogTitle';
+import { postCategories } from 'utils/staticLists';
 
 const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode }) => {
   const [mutationError, setMutationError] = useState(false);
@@ -22,6 +26,7 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
     title: Yup.string()
       .required('Title is required'),
     content: Yup.string().required(),
+    category: Yup.string().required(),
     cover: Yup.string()
   });
 
@@ -117,6 +122,38 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
                     )}
                   />
                   <Field
+                    name='category'
+                    render={({ field, form }) => (
+                      <Select
+                        {...field}
+                        value={field.value || 0}
+                        fullWidth
+                        style={{ margin: '17px 0' }}
+                        variant='outlined'
+                        required
+                        input={
+                          <OutlinedInput
+                            name='category'
+                            placeholder='Category'
+                          />
+                        }
+                      >
+                        <MenuItem
+                          key='select.category'
+                          value={0}
+                          disabled
+                        >
+                          <em>Select a category</em>
+                        </MenuItem>
+                        {postCategories.map(category => (
+                          <MenuItem key={category.value} value={category.value}>
+                            {category.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                  <Field
                     name='cover'
                     render={({ field, form }) => (
                       <TextFieldGroup
@@ -125,7 +162,6 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
                         name='cover'
                         label='Cover'
                         placeholder='Cover'
-                        required
                       />
                     )}
                   />

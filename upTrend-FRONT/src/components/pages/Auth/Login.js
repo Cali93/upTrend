@@ -7,18 +7,18 @@ import {
   Button,
   Typography,
   CircularProgress,
-  withStyles,
   Fade
 } from '@material-ui/core';
 
-import google from 'assets/google.svg';
-import { styles } from './auth.styles';
+import { useAuthStyles } from './auth.styles';
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import { LOGIN_USER } from 'graphql/auth';
 import { isEmptyObject } from 'utils/helpers';
 import { useStoreActions } from 'easy-peasy';
+import GoogleSignInButton from 'components/atoms/GoogleSignInButton/GoogleSignInButton';
 
-const Login = ({ classes, history }) => {
+const Login = ({ history }) => {
+  const classes = useAuthStyles();
   const [authError, setAuthError] = useState(false);
   const setUser = useStoreActions(actions => actions.user.setUser);
 
@@ -50,7 +50,7 @@ const Login = ({ classes, history }) => {
         if (isLoginOk && data.login.user.id) {
           const { __typename, ...userData } = data.login.user;
           setUser(userData);
-          return history.push('/app/estates');
+          return history.push('/app/posts');
         }
       } catch (err) {
         return setAuthError(true);
@@ -73,18 +73,10 @@ const Login = ({ classes, history }) => {
               <Typography variant='h3' className={classes.tabContentTitle}>
                 Access your account
               </Typography>
-              <Button
+              <GoogleSignInButton
                 size='large'
                 className={classes.googleButton}
-                href={`${process.env.REACT_APP_API_URL}/auth/google`}
-              >
-                <img
-                  src={google}
-                  alt='google'
-                  className={classes.googleIcon}
-                />
-                &nbsp;Sign in with Google
-              </Button>
+              />
               <div className={classes.formDividerContainer}>
                 <div className={classes.formDivider} />
                 <Typography className={classes.formDividerWord}>
@@ -162,4 +154,4 @@ const Login = ({ classes, history }) => {
   );
 };
 
-export default withRouter(withStyles(styles)(Login));
+export default withRouter(Login);

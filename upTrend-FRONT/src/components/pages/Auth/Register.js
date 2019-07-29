@@ -6,7 +6,6 @@ import {
   Button,
   Typography,
   CircularProgress,
-  withStyles,
   Fade,
   FormControlLabel,
   FormLabel,
@@ -16,14 +15,15 @@ import {
 } from '@material-ui/core';
 import cn from 'classnames';
 
-import google from 'assets/google.svg';
-import { styles } from './auth.styles';
+import { useAuthStyles } from './auth.styles';
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import { CREATE_USER } from 'graphql/auth';
 import { isEmptyObject } from 'utils/helpers';
 import { genders } from 'utils/staticLists';
+import GoogleSignInButton from 'components/atoms/GoogleSignInButton/GoogleSignInButton';
 
-export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
+export const Register = ({ handleTabChange }) => {
+  const classes = useAuthStyles();
   const [authError, setAuthError] = useState(false);
   const validateFields = Yup.object().shape({
     firstName: Yup.string().required('First Name is required'),
@@ -189,21 +189,17 @@ export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
                 <Typography className={classes.formDividerWord}>or</Typography>
                 <div className={classes.formDivider} />
               </div>
-              <Button
-                href='http://localhost:5000/auth/google'
+              <GoogleSignInButton
                 size='large'
                 className={cn(
                   classes.googleButton,
                   classes.googleButtonCreating
                 )}
-              >
-                <img src={google} alt='google' className={classes.googleIcon} />
-                &nbsp;Sign in with Google
-              </Button>
+              />
             </Form>
           )}
         />
       )}
     </Mutation>
   );
-});
+};

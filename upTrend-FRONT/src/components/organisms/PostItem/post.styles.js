@@ -13,6 +13,19 @@ export const usePostStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column'
   },
+  cardCategoryBanner: {
+    paddingTop: '3%',
+    display: 'flex',
+    justifyContent: 'center',
+    textTransform: 'uppercase',
+    color: 'black',
+    '-webkit-filter': 'grayscale(100%)', /* Safari 6.0 - 9.0 */
+    filter: 'grayscale(100%)'
+  },
+  cardCategoryBannerText: {
+    padding: '5px 10px 0 10px',
+    background: 'rgba(255,255,255, 0.5)'
+  },
   cardMedia: {
     paddingTop: '56.25%' // 16:9
   },

@@ -4,12 +4,39 @@ export const roles = [
     label: 'Admin'
   },
   {
-    value: 'manager',
-    label: 'Manager'
+    value: 'moderator',
+    label: 'Moderator'
   },
   {
     value: 'user',
     label: 'Basic user'
+  }
+];
+
+export const postCategories = [
+  {
+    value: 'software',
+    label: 'Software development'
+  },
+  {
+    value: 'network',
+    label: 'Netwok management'
+  },
+  {
+    value: 'security',
+    label: 'Cyber Security'
+  },
+  {
+    value: 'testing',
+    label: 'Automation testing'
+  },
+  {
+    value: 'AI',
+    label: 'Artificial Intelligence'
+  },
+  {
+    value: 'cloud',
+    label: 'Cloud computing'
   }
 ];
 

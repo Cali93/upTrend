@@ -1,4 +1,6 @@
-export const styles = theme => ({
+import { makeStyles } from '@material-ui/core';
+
+export const useAuthStyles = makeStyles(theme => ({
   container: {
     height: '100vh',
     width: '100vw',
@@ -125,4 +127,4 @@ export const styles = theme => ({
   loginLoader: {
     marginLeft: theme.spacing(4)
   }
-});
+}));

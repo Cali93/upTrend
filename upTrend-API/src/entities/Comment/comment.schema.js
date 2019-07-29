@@ -32,7 +32,7 @@ export default gql`
   }
 
   type Query {
-    allPostComments(postId: Int!): PostCommentsResponse!,
+    allCommentsByPostId(postId: Int!): PostCommentsResponse!,
     postCommentsCount(postId: Int!): PostCommentsCountResponse!
   }
 
@@ -56,7 +56,7 @@ export default gql`
 
   type PostCommentsResponse {
     ok: Boolean!
-    comments: [Comment]!
+    comments: [Comment!]
     errors: [Error]
   }
 `;

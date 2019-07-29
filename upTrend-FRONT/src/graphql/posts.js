@@ -15,6 +15,19 @@ export const GET_ALL_POSTS = gql`
   }
 `;
 
+export const GET_ONE_POST = gql`
+  query($postId: Int!) {
+    postDetails(postId: $postId) {
+      id
+      title
+      category
+      content
+      cover
+      userId
+    }
+  }
+`;
+
 export const DELETE_POST = gql`
   mutation($postId: Int!) {
     deletePost(postId: $postId) {

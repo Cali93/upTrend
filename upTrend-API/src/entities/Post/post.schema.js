@@ -9,6 +9,7 @@ export default gql`
     content: String!
     cover: String
     userId: Int!
+    comments: [Comment!]!
   }
 
   input CreatePostInput {
@@ -27,6 +28,7 @@ export default gql`
   }
 
   type Query {
+    postDetails(postId: Int!): Post!,
     allPosts: PostsResponse!,
     myPosts(userId: Int!): PostsResponse!
   }

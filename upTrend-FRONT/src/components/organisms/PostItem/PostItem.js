@@ -52,9 +52,14 @@ const PostItem = ({ id, userId, title, category, content, cover }) => {
         <FullScreenDialog
           isOpen={isReadDialogOpen}
           toggleDialog={setToggleReadDialog}
+          title={title}
+          category={category}
+          content={content}
+          postId={id}
+          author={userId}
         />
       )}
-      <Grid item key={id} xs={12} sm={6} md={4}>
+      <Grid item key={id} xs={12} sm={6} md={4} lg={3}>
         <Card className={classes.card}>
           <CardMedia
             className={classes.cardCategoryBanner}

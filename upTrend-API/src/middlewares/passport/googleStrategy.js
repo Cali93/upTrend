@@ -1,7 +1,7 @@
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Sequelize from 'sequelize';
-import models from '../../ressources/models';
 import { API_CONFIG } from 'config';
+import models from '../../ressources/models';
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google

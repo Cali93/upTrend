@@ -1,12 +1,26 @@
 import { formatErrors } from '../../utils/format-errors';
+import Sequelize from 'sequelize';
+const { Op } = Sequelize;
 
 export default {
   Query: {
-    allPostComments: (parent, { postId }, { models }) =>
-      models.Comments.findAll({
-        where: { id: { [models.Op.eq]: postId } },
-        raw: true
-      }).then(posts => ({ posts }))
+    allCommentsByPostId: async (parent, { postId }, { models }) => {
+      try {
+        const comments = await models.Comment.findAll({
+          where: { postId },
+          raw: true
+        });
+        return {
+          ok: true,
+          comments
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
+    }
   },
   Mutation: {
     updateComment: async (parent, { input }, { models }) => {
@@ -14,7 +28,7 @@ export default {
         const { commentId, ...newData } = input;
         await models.Comment.update(
           { ...newData },
-          { where: { id: { [models.Op.eq]: commentId } } }
+          { where: { id: { [Op.eq]: commentId } } }
         );
         return {
           ok: true
@@ -32,7 +46,7 @@ export default {
         const positiveVotes = await models.Comment.findOne({
           attributes: ['postiviteVotes'],
           where: {
-            id: { [models.Op.eq]: commentId }
+            id: { [Op.eq]: commentId }
           }
         }).then(positiveVotes => [...positiveVotes, userId]);
 
@@ -52,7 +66,7 @@ export default {
         const negativeVotes = await models.Comment.findOne({
           attributes: ['negativeVotes'],
           where: {
-            id: { [models.Op.eq]: commentId }
+            id: { [Op.eq]: commentId }
           }
         }).then(negativeVotes => [...negativeVotes, userId]);
 
@@ -68,7 +82,7 @@ export default {
     },
     deleteComment: async (parent, { commentId }, { models }) => {
       try {
-        await models.Comment.destroy({ where: { id: { [models.Op.eq]: commentId } } });
+        await models.Comment.destroy({ where: { id: { [Op.eq]: commentId } } });
         return {
           ok: true
         };

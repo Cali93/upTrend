@@ -56,7 +56,7 @@ const Posts = () => {
           toggleDialog={setToggleCreateDialog}
         />
       )}
-      <Container className={classes.cardGrid} maxWidth='lg'>
+      <Container className={classes.cardGrid} maxWidth='xl'>
         <Grid container spacing={4}>
           <PostList posts={data.allPosts.posts} />
         </Grid>

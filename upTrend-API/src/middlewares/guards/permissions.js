@@ -1,9 +1,11 @@
 import { or, and, rule, shield } from 'graphql-shield';
+import Sequelize from 'sequelize';
+const { Op } = Sequelize;
 
 const isAuthenticated = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
-      where: { id: { [models.Op.eq]: req.session.userId } },
+      where: { id: { [Op.eq]: req.session.userId } },
       raw: true
     }).then(user => !!user.id);
   }
@@ -13,8 +15,8 @@ const isAdmin = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
       where: {
-        id: { [models.Op.eq]: req.session.userId },
-        role: { [models.Op.eq]: 'admin' }
+        id: { [Op.eq]: req.session.userId },
+        role: { [Op.eq]: 'admin' }
       },
       raw: true
     }).then(({ role }) => role === 'admin');
@@ -27,12 +29,12 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.Post.findOne({
       where: {
-        id: { [models.Op.eq]: args.input.postId },
-        userId: { [models.Op.eq]: req.session.userId }
+        id: { [Op.eq]: args.postId || args.input.postId },
+        userId: { [Op.eq]: req.session.userId }
       },
       raw: true
     }).then(post =>
-      post.id === args.input.postId
+      post.id === args.postId || args.input.postId
     );
   } else {
     return false;
@@ -41,10 +43,9 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
 
 export const permissions = shield({
   Query: {
-    getUser: isAuthenticated
-    // allEstates: isAdmin,
-    // allEstatesByPostId: isAuthenticated,
-    // allPosts: isAuthenticated,
+    getUser: isAuthenticated,
+    allCommentsByPostId: isAuthenticated,
+    allPosts: isAuthenticated
     // allUsers: isAdmin,
     // allUsersByPostId: isAuthenticated
   },
@@ -53,8 +54,8 @@ export const permissions = shield({
     // updateEstate: or(isAdmin, and(isManager, estatebelongsToSamePost)),
     // deleteEstate: or(isAdmin, and(isManager, estatebelongsToSamePost)),
     createPost: isAuthenticated,
-    updatePost: isPostOwner
-    // deletePost: isAdmin,
+    updatePost: isPostOwner,
+    deletePost: isPostOwner
     // createUser: isAdminOrManager,
     // updateUser: or(isAdminOrOwner, and(isManager, userbelongsToSamePost)),
     // deleteUser: or(isAdmin, and(isManager, userbelongsToSamePost))

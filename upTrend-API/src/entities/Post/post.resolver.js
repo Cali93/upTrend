@@ -4,6 +4,13 @@ const { Op } = Sequelize;
 
 export default {
   Query: {
+    // postDetails: async (parent, { postId }, { models }) => {
+    //   const likes = await models.Likes.findOne({ where: { id: postId }, raw: true });
+    //   const comments = await models.Comments.findAll({
+    //     where: { id: { [Op.eq]: postId } },
+    //     raw: true
+    //   }).then(comments => ({ comments }))
+    // },
     allPosts: (parent, args, { models }) =>
       models.Post.findAll({ raw: true }).then(posts => ({ posts }))
   },

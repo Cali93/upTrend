@@ -1,10 +1,12 @@
 import { formatErrors } from '../../utils/format-errors';
+import Sequelize from 'sequelize';
+const { Op } = Sequelize;
 
 export default {
   Query: {
     myBookmarks: (parent, args, { models, req }) =>
       models.Bookmarks.findAll({
-        where: { userId: { [models.Op.eq]: req.session.userId } },
+        where: { userId: { [Op.eq]: req.session.userId } },
         raw: true
       }).then(bookmarks => console.log(bookmarks.getPosts()))
   },

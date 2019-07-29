@@ -23,11 +23,12 @@ export const usePostStyles = makeStyles(theme => ({
     filter: 'grayscale(100%)'
   },
   cardCategoryBannerText: {
+    color: 'white',
     padding: '5px 10px 0 10px',
-    background: 'rgba(255,255,255, 0.5)'
+    background: 'rgba(0,0,0, 0.5)'
   },
   cardMedia: {
-    paddingTop: '56.25%' // 16:9
+    paddingTop: '40%'
   },
   cardContent: {
     flexGrow: 1

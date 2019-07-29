@@ -1,6 +1,5 @@
 import Sequelize from 'sequelize';
 import { db } from './db';
-const { Op } = Sequelize;
 
 const models = {
   User: db.import('../entities/User/User.model.js'),
@@ -19,6 +18,5 @@ Object.keys(models).forEach(modelName => {
 export default {
   ...models,
   db,
-  Op,
   Sequelize
 };

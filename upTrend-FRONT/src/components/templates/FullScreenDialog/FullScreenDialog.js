@@ -12,6 +12,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import { useQuery } from 'react-apollo-hooks';
+import { GET_ONE_POST } from 'graphql/posts';
+import { GET_ALL_COMMENTS_BY_POST } from 'graphql/comments';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -27,9 +30,12 @@ const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog ({ isOpen, toggleDialog, title }) {
+export default function FullScreenDialog ({ isOpen, toggleDialog, title, category, content, author, postId }) {
   const classes = useStyles();
-
+  const { data, loading, error } = useQuery(GET_ALL_COMMENTS_BY_POST, { variables: { postId } });
+  if (loading) return <div />;
+  if (error) return <h4>Oops, an error has occured</h4>;
+  console.log(data);
   return (
     <div>
       <Dialog fullScreen open={isOpen} onClose={toggleDialog} TransitionComponent={Transition}>
@@ -39,7 +45,7 @@ export default function FullScreenDialog ({ isOpen, toggleDialog, title }) {
               <CloseIcon />
             </IconButton>
             <Typography variant='h6' className={classes.title}>
-              {title}
+              {category}
             </Typography>
             <Button color='inherit' onClick={toggleDialog}>
               save
@@ -48,11 +54,11 @@ export default function FullScreenDialog ({ isOpen, toggleDialog, title }) {
         </AppBar>
         <List>
           <ListItem button>
-            <ListItemText primary='Phone ringtone' secondary='Titania' />
+            <ListItemText primary={title} secondary={author} />
           </ListItem>
           <Divider />
           <ListItem button>
-            <ListItemText primary='Default notification ringtone' secondary='Tethys' />
+            <ListItemText primary={content} />
           </ListItem>
         </List>
       </Dialog>

@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { v4 } from 'uuid';
 import { API_CONFIG } from 'config';
+import Sequelize from 'sequelize';
 import { formatErrors } from '../../utils/format-errors';
+const { Op } = Sequelize;
 
 export default {
   Query: {
@@ -11,7 +13,7 @@ export default {
           {
             where: {
               id: {
-                [models.Op.eq]: req.session.userId
+                [Op.eq]: req.session.userId
               }
             },
             raw: true
@@ -76,7 +78,7 @@ export default {
         const { userId, ...newData } = input;
         await models.User.update(
           { ...newData },
-          { where: { id: { [models.Op.eq]: userId } } }
+          { where: { id: { [Op.eq]: userId } } }
         );
         return {
           ok: true
@@ -91,7 +93,7 @@ export default {
     login: async (_parent, { email, password }, { models, req }) => {
       try {
         const user = await models.User.findOne({
-          where: { email: { [models.Op.eq]: email } },
+          where: { email: { [Op.eq]: email } },
           raw: true
         });
 

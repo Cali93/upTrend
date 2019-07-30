@@ -18,6 +18,14 @@ export const GET_ALL_COMMENTS_BY_POST = gql`
   }
 `;
 
+export const GET_COMMENTS_COUNT_BY_POST = gql`
+  query commentsCountByPostId($postId: Int!) {
+    commentsCountByPostId(postId: $postId) {
+      count
+    }
+  }
+`;
+
 export const DELETE_COMMENT = gql`
   mutation($id: Int!) {
     deleteComment(id: $id) {

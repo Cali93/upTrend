@@ -8,7 +8,22 @@ export default {
       models.Likes.findAll({
         where: { userId: { [Op.eq]: req.session.userId } },
         raw: true
-      }).then(bookmarks => console.log(bookmarks.getPosts()))
+      }).then(bookmarks => console.log(bookmarks.getPosts())),
+    likesCountByPostId: async (parent, { postId }, { models }) => {
+      try {
+        const [ count ] = await models.Like.findAll({
+          where: { postId },
+          attributes: [[models.db.fn('COUNT', models.db.col('id')), 'count']],
+          raw: true
+        });
+        return count;
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
+    }
   },
   Mutation: {
     deleteLike: async (parent, { bookmarkId }, { models }) => {

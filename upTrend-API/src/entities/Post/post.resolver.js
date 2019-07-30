@@ -11,6 +11,7 @@ export default {
     //     raw: true
     //   }).then(comments => ({ comments }))
     // },
+    // I need: the post infos, the number of comments, and number of likes
     allPosts: (parent, args, { models }) =>
       models.Post.findAll({ raw: true }).then(posts => ({ posts }))
   },

@@ -5,7 +5,6 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import SeeIcon from '@material-ui/icons/RemoveRedEye';
 import EditIcon from '@material-ui/icons/Edit';
 import { Grid, Typography, Button } from '@material-ui/core';
 
@@ -14,9 +13,11 @@ import { sliceContent } from 'utils/helpers';
 import useToggle from 'utils/hooks/useToggle';
 import FullScreenDialog from 'components/templates/FullScreenDialog/FullScreenDialog';
 import DeleteButton from 'components/molecules/DeleteButton/DeleteButton';
+import CommentsIndicator from 'components/molecules/CommentsIndicator/CommentsIndicator';
 
 import PostFormDialog from '../../templates/PostForm/PostFormDialog';
 import { usePostStyles } from './post.styles';
+import LikeButton from 'components/molecules/LikeButton/LikeButton';
 
 const PostItem = ({ id, userId, title, category, content, cover }) => {
   const classes = usePostStyles();
@@ -89,13 +90,8 @@ const PostItem = ({ id, userId, title, category, content, cover }) => {
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
-            <Button
-              size='small'
-              color='primary'
-              onClick={setToggleReadDialog}
-            >
-              <SeeIcon color='primary' />
-            </Button>
+            <LikeButton postId={id} />
+            <CommentsIndicator onClick={setToggleReadDialog} postId={id} />
             {userId === currentUser && (
               <>
                 <Button

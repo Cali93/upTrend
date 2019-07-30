@@ -22,7 +22,7 @@ export default (db, DataTypes) => {
       }
     );
     Post.belongsToMany(
-      models.User,
+      models.Like,
       {
         through:
           models.Like,
@@ -35,7 +35,7 @@ export default (db, DataTypes) => {
       }
     );
     Post.belongsToMany(
-      models.User,
+      models.Bookmark,
       {
         through:
           models.Bookmark,

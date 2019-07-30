@@ -33,7 +33,8 @@ export default gql`
 
   type Query {
     allCommentsByPostId(postId: Int!): PostCommentsResponse!,
-    postCommentsCount(postId: Int!): PostCommentsCountResponse!
+    commentsCountByPostId(postId: Int!): PostCommentsCountResponse!,
+    # postCommentsCount(postId: Int!): PostCommentsCountResponse!
   }
 
   type Mutation {
@@ -46,7 +47,9 @@ export default gql`
   }
 
   type PostCommentsCountResponse {
-    count: Int!
+    ok: Boolean
+    count: Int
+    errors: [Error]
   }
 
   type CommentResponseStatus {

@@ -14,6 +14,7 @@ export default gql`
   }
 
   type Query {
+    likesCountByPostId(postId: Int!): PostLikesCountResponse!,
     myLikes(userId: Int!): LikesResponseStatus!
   }
 
@@ -24,6 +25,12 @@ export default gql`
 
   type LikeResponseStatus {
     ok: Boolean!
+    errors: [Error]
+  }
+
+  type PostLikesCountResponse {
+    ok: Boolean
+    count: Int
     errors: [Error]
   }
 

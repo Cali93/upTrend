@@ -20,6 +20,21 @@ export default {
           errors: formatErrors(err, models)
         };
       }
+    },
+    commentsCountByPostId: async (parent, { postId }, { models }) => {
+      try {
+        const [ count ] = await models.Comment.findAll({
+          where: { postId },
+          attributes: [[models.db.fn('COUNT', models.db.col('id')), 'count']],
+          raw: true
+        });
+        return count;
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
     }
   },
   Mutation: {

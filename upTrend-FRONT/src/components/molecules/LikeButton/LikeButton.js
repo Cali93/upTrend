@@ -4,25 +4,23 @@ import { useQuery } from 'react-apollo-hooks';
 import { Button, Badge } from '@material-ui/core';
 import LikeIcon from '@material-ui/icons/ThumbUp';
 
-import { GET_LIKES_COUNT_BY_POST } from 'graphql/likes';
-
 import { useLikeButtonStyles } from './likeButton.styles';
+import { useStoreState } from 'easy-peasy';
 
-const LikeButton = ({ postId }) => {
+const LikeButton = ({ likes, count }) => {
   const classes = useLikeButtonStyles();
-  const { data, loading, error } = useQuery(GET_LIKES_COUNT_BY_POST, {
-    variables: { postId }
-  });
-  if (loading) return <div />;
-  if (error) return <h4>Oops, an error has occured.</h4>;
+  const isLiked = useStoreState(state => likes.includes(state.user.user.id));
+
   return (
     <Button
       size='small'
       color='primary'
       onClick={() => console.log('hey')}
     >
-      <Badge classes={{ badge: classes.badge }} badgeContent={data.likesCountByPostId.count} >
-        <LikeIcon color='primary' />
+      <Badge classes={{ badge: classes.badge }} badgeContent={count} >
+        <LikeIcon style={{
+          color: isLiked ? 'green' : 'inherit'
+        }} color='primary' />
       </Badge>
     </Button>
   );

@@ -4,16 +4,24 @@ const { Op } = Sequelize;
 
 export default {
   Query: {
-    // postDetails: async (parent, { postId }, { models }) => {
-    //   const likes = await models.Likes.findOne({ where: { id: postId }, raw: true });
-    //   const comments = await models.Comments.findAll({
-    //     where: { id: { [Op.eq]: postId } },
-    //     raw: true
-    //   }).then(comments => ({ comments }))
-    // },
-    // I need: the post infos, the number of comments, and number of likes
-    allPosts: (parent, args, { models }) =>
-      models.Post.findAll({ raw: true }).then(posts => ({ posts }))
+    allPosts: async (parent, args, { models }) => {
+      const allPosts = await models.db.query(`
+        SELECT 
+          p.id, p.title, p.category, p."content", p.cover, p.created_at, p.updated_at,
+          p.user_id as "userId",
+          COALESCE(json_agg(distinct l.user_id)
+            FILTER(WHERE l.user_id IS NOT NULL), '[]') as likes,
+          count(distinct c.user_id) as "commentsCount"
+        FROM 
+          posts as p
+        LEFT JOIN "comments" as c
+          on p.id = c.post_id
+        LEFT JOIN likes as l
+          on p.id = l.post_id
+        GROUP BY p.id
+      `, { type: models.db.QueryTypes.SELECT });
+      return allPosts;
+    }
   },
   Mutation: {
     updatePost: async (parent, { input }, { models }) => {

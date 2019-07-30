@@ -58,7 +58,7 @@ const Posts = () => {
       )}
       <Container className={classes.cardGrid} maxWidth='xl'>
         <Grid container spacing={4}>
-          <PostList posts={data.allPosts.posts} />
+          <PostList posts={data.allPosts} />
         </Grid>
       </Container>
     </>

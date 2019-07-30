@@ -9,7 +9,8 @@ export default gql`
     content: String!
     cover: String
     userId: Int!
-    comments: [Comment!]!
+    commentsCount: Int
+    likes: [Int]
   }
 
   input CreatePostInput {
@@ -28,8 +29,7 @@ export default gql`
   }
 
   type Query {
-    postDetails(postId: Int!): Post!,
-    allPosts: PostsResponse!,
+    allPosts: [Post!],
     myPosts(userId: Int!): PostsResponse!
   }
 
@@ -45,6 +45,6 @@ export default gql`
   }
 
   type PostsResponse {
-    posts: [Post]!
+    posts: [Post!]
   }
 `;

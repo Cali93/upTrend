@@ -19,7 +19,7 @@ import PostFormDialog from '../../templates/PostForm/PostFormDialog';
 import { usePostStyles } from './post.styles';
 import LikeButton from 'components/molecules/LikeButton/LikeButton';
 
-const PostItem = ({ id, userId, title, category, content, cover }) => {
+const PostItem = ({ id, userId, title, category, content, cover, likes, commentsCount }) => {
   const classes = usePostStyles();
   const currentUser = useStoreState(state => state.user.user.id);
   const { isOpen: isEditDialogOpen, handleToggle: setToggleEditDialog } = useToggle();
@@ -90,8 +90,8 @@ const PostItem = ({ id, userId, title, category, content, cover }) => {
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
-            <LikeButton postId={id} />
-            <CommentsIndicator onClick={setToggleReadDialog} postId={id} />
+            <LikeButton likes={likes} count={likes.length} />
+            <CommentsIndicator onClick={setToggleReadDialog} postId={id} count={commentsCount} />
             {userId === currentUser && (
               <>
                 <Button

@@ -3,11 +3,28 @@ import gql from 'graphql-tag';
 export const GET_ALL_POSTS = gql`
   query {
     allPosts {
+      id
+      title
+      category
+      content
+      commentsCount
+      likes
+      cover
+      userId
+    }
+  }
+`;
+
+export const GET_ALL_POSTS_WITH_DETAILS = gql`
+  query {
+    allPostsWithDetails {
       posts {
         id
         title
         category
         content
+        comments
+        likes
         cover
         userId
       }

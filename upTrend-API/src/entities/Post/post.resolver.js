@@ -11,13 +11,12 @@ export default {
           p.user_id as "userId",
           COALESCE(json_agg(distinct l.user_id)
             FILTER(WHERE l.user_id IS NOT NULL), '[]') as likes,
-          count(distinct c.user_id) as "commentsCount"
-        FROM 
-          posts as p
+          COUNT(distinct c.user_id) as "commentsCount"
+        FROM posts as p
         LEFT JOIN "comments" as c
-          on p.id = c.post_id
+          ON p.id = c.post_id
         LEFT JOIN likes as l
-          on p.id = l.post_id
+          ON p.id = l.post_id
         GROUP BY p.id
       `, { type: models.db.QueryTypes.SELECT });
       return allPosts;

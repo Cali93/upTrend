@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHeroContainerStyles } from './heroContainer.styles';
-import { Container, Typography, Grid, Button } from '@material-ui/core';
+import { Container, Typography, Grid } from '@material-ui/core';
 
-const HeroContainer = ({ title, description, heroButtons }) => {
+const HeroContainer = ({ id, title, description, heroButtons }) => {
   const classes = useHeroContainerStyles();
   return (
-    <div className={classes.heroContent}>
+    <div className={classes.heroContent} id={id}>
       <Container maxWidth='sm'>
         <Typography
           component='h1'

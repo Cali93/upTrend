@@ -30,6 +30,7 @@ const Posts = () => {
     <>
       <CssBaseline />
       <HeroContainer
+        id='posts-section'
         title='Posts'
         description='You can browse through all our posts accross the world.'
         heroButtons={

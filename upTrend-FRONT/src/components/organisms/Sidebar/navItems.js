@@ -5,7 +5,6 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import SettingsIcon from '@material-ui/icons/Settings';
 import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import PeopleIcon from '@material-ui/icons/People';
@@ -64,11 +63,17 @@ export const SecondaryNavItems = withRouter(({ history }) => {
   const selectedCategory = useStoreState(state => state.posts.selectedCategory);
   const isActive = category => category === selectedCategory;
   const isOnPostsPage = history.location.pathname.includes('/app/posts');
+
+  const handleCategoryChange = category => {
+    setCategoryToBrowse(category);
+    const elmnt = document.getElementById('posts-section');
+    return elmnt.scrollIntoView(({ block: 'end', behavior: 'smooth' }));
+  };
   return isOnPostsPage && (
     <>
       <ListItem
         button
-        onClick={() => setCategoryToBrowse('')}
+        onClick={() => handleCategoryChange('')}
         selected={isActive('')}
       >
         <ListItemIcon>
@@ -78,7 +83,7 @@ export const SecondaryNavItems = withRouter(({ history }) => {
       </ListItem>
       <ListItem
         button
-        onClick={() => setCategoryToBrowse('software')}
+        onClick={() => handleCategoryChange('software')}
         selected={isActive('software')}
       >
         <ListItemIcon>
@@ -86,25 +91,25 @@ export const SecondaryNavItems = withRouter(({ history }) => {
         </ListItemIcon>
         <ListItemText primary='Software' />
       </ListItem>
-      <ListItem button onClick={() => setCategoryToBrowse('security')} selected={isActive('security')}>
+      <ListItem button onClick={() => handleCategoryChange('security')} selected={isActive('security')}>
         <ListItemIcon>
           <SecurityIcon />
         </ListItemIcon>
         <ListItemText primary='Security' />
       </ListItem>
-      <ListItem button onClick={() => setCategoryToBrowse('network')} selected={isActive('network')}>
+      <ListItem button onClick={() => handleCategoryChange('network')} selected={isActive('network')}>
         <ListItemIcon>
           <NetworkIcon />
         </ListItemIcon>
         <ListItemText primary='Network' />
       </ListItem>
-      <ListItem button onClick={() => setCategoryToBrowse('AI')} selected={isActive('AI')}>
+      <ListItem button onClick={() => handleCategoryChange('AI')} selected={isActive('AI')}>
         <ListItemIcon>
           <AIIcon />
         </ListItemIcon>
         <ListItemText primary='Artificial Intelligence' />
       </ListItem>
-      <ListItem button onClick={() => setCategoryToBrowse('testing')} selected={isActive('testing')}>
+      <ListItem button onClick={() => handleCategoryChange('testing')} selected={isActive('testing')}>
         <ListItemIcon>
           <TestingIcon />
         </ListItemIcon>

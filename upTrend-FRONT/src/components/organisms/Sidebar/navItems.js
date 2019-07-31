@@ -5,16 +5,17 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import SettingsIcon from '@material-ui/icons/Settings';
-import BookmarksIcon from '@material-ui/icons/Bookmarks';
-import PeopleIcon from '@material-ui/icons/People';
-import PostsIcon from '@material-ui/icons/LibraryBooks';
-import CodeIcon from '@material-ui/icons/Code';
-import SecurityIcon from '@material-ui/icons/Security';
-import NetworkIcon from '@material-ui/icons/NetworkCheck';
-import TestingIcon from '@material-ui/icons/Assignment';
-import AIIcon from '@material-ui/icons/GraphicEq';
-import AllIcon from '@material-ui/icons/AllInclusive';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
+import BookmarksIcon from '@material-ui/icons/BookmarksOutlined';
+import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import PostsIcon from '@material-ui/icons/LibraryBooksOutlined';
+import LikesIcon from '@material-ui/icons/ThumbUpAltOutlined';
+import CodeIcon from '@material-ui/icons/CodeOutlined';
+import SecurityIcon from '@material-ui/icons/SecurityOutlined';
+import NetworkIcon from '@material-ui/icons/NetworkCheckOutlined';
+import TestingIcon from '@material-ui/icons/AssignmentOutlined';
+import AIIcon from '@material-ui/icons/GraphicEqOutlined';
+import AllIcon from '@material-ui/icons/AllInclusiveOutlined';
 
 import { resetLinkStyle } from 'utils/styles';
 
@@ -28,6 +29,14 @@ export const MainNavItems = withRouter(({ history, match }) => {
             <PostsIcon />
           </ListItemIcon>
           <ListItemText primary='Posts' />
+        </ListItem>
+      </Link>
+      <Link style={resetLinkStyle} to='/app/liked'>
+        <ListItem button selected={isActive('/app/liked')}>
+          <ListItemIcon>
+            <LikesIcon />
+          </ListItemIcon>
+          <ListItemText primary='Liked posts' />
         </ListItem>
       </Link>
       <Link style={resetLinkStyle} to='/app/bookmarks'>
@@ -62,14 +71,16 @@ export const SecondaryNavItems = withRouter(({ history }) => {
   const setCategoryToBrowse = useStoreActions(actions => actions.posts.setCategoryToBrowse);
   const selectedCategory = useStoreState(state => state.posts.selectedCategory);
   const isActive = category => category === selectedCategory;
-  const isOnPostsPage = history.location.pathname.includes('/app/posts');
+  const isOnPosts =
+    history.location.pathname.includes('/app/posts') ||
+    history.location.pathname.includes('/app/liked');
 
   const handleCategoryChange = category => {
     setCategoryToBrowse(category);
     const elmnt = document.getElementById('posts-section');
     return elmnt.scrollIntoView(({ block: 'end', behavior: 'smooth' }));
   };
-  return isOnPostsPage && (
+  return isOnPosts && (
     <>
       <ListItem
         button

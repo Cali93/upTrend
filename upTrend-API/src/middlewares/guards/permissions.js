@@ -43,7 +43,7 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
 
 export const permissions = shield({
   Query: {
-    getUser: isAuthenticated,
+    getCurrentUser: isAuthenticated,
     allCommentsByPostId: isAuthenticated,
     allPosts: isAuthenticated
     // myLikedPosts: isAuthenticated

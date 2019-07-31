@@ -7,7 +7,7 @@ const { Op } = Sequelize;
 
 export default {
   Query: {
-    getUser: async (_parent, _args, { models, req }) => {
+    getCurrentUser: async (_parent, _args, { models, req }) => {
       try {
         const user = await models.User.scope('withoutPassword').findOne(
           {

@@ -13,10 +13,10 @@ export const PrivateRoute = ({ component: Component, ...rest }) => (
           {...rest}
           render={props =>
             data &&
-            data.getUser &&
-            data.getUser.ok &&
-            data.getUser.user &&
-            data.getUser.user.id ? (
+            data.getCurrentUser &&
+            data.getCurrentUser.ok &&
+            data.getCurrentUser.user &&
+            data.getCurrentUser.user.id ? (
               <Component {...props} />
               ) : (
                 <Redirect to='/authenticate' />

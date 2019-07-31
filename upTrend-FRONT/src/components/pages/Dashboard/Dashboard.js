@@ -8,6 +8,7 @@ import { PrivateRoute } from 'utils/HOCs/PrivateRoute/PrivateRoute';
 
 import Profile from './Profile/Profile';
 import Posts from './Posts/Posts';
+import LikedPosts from './LikedPosts/LikedPosts';
 import Users from './Users/Users';
 import { useDashboardStyles } from './dashboard.styles';
 
@@ -28,6 +29,7 @@ const Dashboard = () => {
           <div className={classes.appBarSpacer} />
           <Switch>
             <PrivateRoute exact path='/app/posts' component={Posts} />
+            <PrivateRoute exact path='/app/liked' component={LikedPosts} />
             <PrivateRoute exact path='/app/users' component={Users} />
             <PrivateRoute exact path='/app/profile' component={Profile} />
           </Switch>

@@ -7,9 +7,12 @@ export default {
     allCommentsByPostId: async (parent, { postId }, { models }) => {
       try {
         const comments = await models.Comment.findAll({
-          where: { postId },
-          raw: true
-        });
+          include: [{
+            model: models.User,
+            attributes: ['avatar', 'firstName', 'lastName']
+          }],
+          where: { postId }
+        }).then(comments => JSON.parse(JSON.stringify(comments)));
         return {
           ok: true,
           comments

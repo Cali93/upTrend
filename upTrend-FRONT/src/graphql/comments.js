@@ -11,6 +11,11 @@ export const GET_ALL_COMMENTS_BY_POST = gql`
         negativeVotes
         userId
         postId
+        User {
+          avatar
+          firstName
+          lastName
+        }
         createdAt
         updatedAt
       }

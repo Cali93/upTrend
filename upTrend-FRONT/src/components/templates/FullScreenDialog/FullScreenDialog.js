@@ -13,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import { useQuery } from 'react-apollo-hooks';
-import { GET_ONE_POST } from 'graphql/posts';
 import { GET_ALL_COMMENTS_BY_POST } from 'graphql/comments';
+import CommentsList from 'components/organisms/CommentsList/CommentsList';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -30,18 +30,31 @@ const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog ({ isOpen, toggleDialog, title, category, content, author, postId }) {
+export default function FullScreenDialog ({ isOpen, toggleDialog, title, category,
+  content, author, postId }) {
   const classes = useStyles();
-  const { data, loading, error } = useQuery(GET_ALL_COMMENTS_BY_POST, { variables: { postId } });
+  const { data, loading, error } = useQuery(GET_ALL_COMMENTS_BY_POST, {
+    variables: { postId }
+  });
   if (loading) return <div />;
   if (error) return <h4>Oops, an error has occured</h4>;
-  console.log(data);
+
   return (
     <div>
-      <Dialog fullScreen open={isOpen} onClose={toggleDialog} TransitionComponent={Transition}>
+      <Dialog
+        fullScreen
+        open={isOpen}
+        onClose={toggleDialog}
+        TransitionComponent={Transition}
+      >
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton edge='start' color='inherit' onClick={toggleDialog} aria-label='close'>
+            <IconButton
+              edge='start'
+              color='inherit'
+              onClick={toggleDialog}
+              aria-label='close'
+            >
               <CloseIcon />
             </IconButton>
             <Typography variant='h6' className={classes.title}>
@@ -56,11 +69,12 @@ export default function FullScreenDialog ({ isOpen, toggleDialog, title, categor
           <ListItem button>
             <ListItemText primary={title} secondary={author} />
           </ListItem>
-          <Divider />
           <ListItem button>
             <ListItemText primary={content} />
           </ListItem>
         </List>
+        <Divider />
+        <CommentsList comments={data.allCommentsByPostId.comments} />
       </Dialog>
     </div>
   );

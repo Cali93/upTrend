@@ -10,6 +10,7 @@ export default gql`
     negativeVotes: [Int!]!
     userId: Int!
     postId: Int!
+    User: UserComment!
     createdAt: String!
     updatedAt: String!
   }
@@ -50,6 +51,12 @@ export default gql`
     ok: Boolean
     count: Int
     errors: [Error]
+  }
+
+  type UserComment {
+    avatar: String!
+    firstName: String!
+    lastName: String!
   }
 
   type CommentResponseStatus {

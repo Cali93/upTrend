@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Mutation, Query } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import { useStoreState } from 'easy-peasy';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+
 import {
   Dialog,
   DialogContent,
@@ -12,43 +13,16 @@ import {
   OutlinedInput,
   MenuItem
 } from '@material-ui/core';
-import { GET_CURRENT_USER } from 'graphql/auth';
-import { GET_ALL_USERS, UPDATE_USER } from 'graphql/users';
+
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import { roles, genders } from 'utils/staticLists';
 import SubmitOrCancel from 'components/organisms/SubmitOrCancel/SubmitOrCancel';
+import { UPDATE_USER, GET_ALL_USERS } from 'graphql/users';
 
 const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
   const [editError, setEditError] = useState(false);
   const role = useStoreState(state => state.user.user.role);
   const isAdmin = role === 'admin';
-
-  const refetchQueryByRole = (role) => {
-    const getCurrentUser = { query: GET_CURRENT_USER };
-    const getAllUsers = { query: GET_ALL_USERS };
-    switch (role) {
-      case 'user':
-        return [
-          getCurrentUser
-        ];
-      // case 'manager':
-      //   return profileMode ? [
-      //     getCurrentUser
-      //   ] : [
-      //   ];
-      // case 'admin':
-      //   return profileMode ? [
-      //     getAllUsers,
-      //     getCurrentUser
-      //   ] : [
-      //     getAllUsers
-      //   ];
-      default:
-        return [
-          getCurrentUser
-        ];
-    }
-  };
 
   const validateFields = Yup.object().shape({
     firstName: Yup.string().required('First Name is required'),
@@ -72,7 +46,7 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
               ...userFields
             }
           },
-          refetchQueries: refetchQueryByRole(role)
+          refetchQueries: [{ query: GET_ALL_USERS }]
         });
         const { data } = updateUserResponse;
         const hasData = data && data.updateUser;

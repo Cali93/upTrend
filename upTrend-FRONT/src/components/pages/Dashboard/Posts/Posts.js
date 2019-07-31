@@ -11,8 +11,7 @@ import useToggle from 'utils/hooks/useToggle';
 import { usePostStyles } from 'components/organisms/PostItem/post.styles';
 import PostFormDialog from 'components/templates/PostForm/PostFormDialog';
 import HeroContainer from 'components/templates/HeroContainer/HeroContainer';
-
-import PostList from './PostList';
+import PostList from 'components/organisms/PostList/PostList';
 
 const Posts = () => {
   const classes = usePostStyles();

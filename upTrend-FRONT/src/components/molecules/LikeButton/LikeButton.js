@@ -49,7 +49,7 @@ const LikeButton = ({ likes, count, postId }) => {
       color='primary'
       onClick={toggleLikeOnPost}
     >
-      <Badge classes={{ badge: classes.badge }} badgeContent={count} >
+      <Badge classes={{ badge: classes.badge }} color='secondary' badgeContent={count} >
         <LikeIcon style={{
           color: isLiked ? '#3CD4A0' : '#1A1E27'
         }} />

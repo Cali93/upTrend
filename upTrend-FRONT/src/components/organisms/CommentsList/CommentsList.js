@@ -26,7 +26,7 @@ export default function CommentsList ({ comments }) {
       {comments.map(comment => {
         const fullName = `${comment.User.firstName} ${comment.User.lastName}`;
         return (
-          <>
+          <div key={comment.id}>
             <ListItem alignItems='flex-start'>
               <ListItemAvatar>
                 <Avatar
@@ -43,10 +43,11 @@ export default function CommentsList ({ comments }) {
                       variant='body2'
                       color='textPrimary'
                     >
-                      {fullName}
+                    By {fullName}
                     </Typography>
                     <Typography
-                      component='p'
+                      display='block'
+                      component='span'
                       variant='body1'
                       color='textPrimary'
                     >
@@ -57,7 +58,7 @@ export default function CommentsList ({ comments }) {
               />
             </ListItem>
             <Divider variant='inset' component='li' />
-          </>
+          </div>
         );
       })}
     </List>

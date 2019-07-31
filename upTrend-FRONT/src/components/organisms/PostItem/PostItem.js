@@ -11,7 +11,7 @@ import { Grid, Typography, Button } from '@material-ui/core';
 import { UPDATE_POST, DELETE_POST, GET_ALL_POSTS } from 'graphql/posts';
 import { sliceContent } from 'utils/helpers';
 import useToggle from 'utils/hooks/useToggle';
-import FullScreenDialog from 'components/templates/FullScreenDialog/FullScreenDialog';
+import PostDetails from 'components/templates/PostDetails/PostDetails';
 import DeleteButton from 'components/molecules/DeleteButton/DeleteButton';
 import CommentsIndicator from 'components/molecules/CommentsIndicator/CommentsIndicator';
 
@@ -50,11 +50,14 @@ const PostItem = ({ id, userId, title, category, content, cover, likes, comments
         />
       )}
       {isReadDialogOpen && (
-        <FullScreenDialog
+        <PostDetails
           isOpen={isReadDialogOpen}
           toggleDialog={setToggleReadDialog}
           title={title}
+          cover={cover}
           category={category}
+          likes={likes}
+          commentsCount={commentsCount}
           content={content}
           postId={id}
           author={userId}

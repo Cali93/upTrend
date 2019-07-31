@@ -5,7 +5,7 @@ const secondary = '#00b7cb';
 const warning = '#FEB900';
 const error = '#f44336';
 const success = '#3CD4A0';
-const info = '#212121';
+const action = '#2132b5';
 
 const lightenRate = 7.5;
 const darkenRate = 15;
@@ -58,12 +58,12 @@ export default {
         .darken(darkenRate)
         .toHexString()
     },
-    info: {
-      main: info,
-      light: tinycolor(info)
+    action: {
+      main: action,
+      light: tinycolor(action)
         .lighten(lightenRate)
         .toHexString(),
-      dark: tinycolor(info)
+      dark: tinycolor(action)
         .darken(darkenRate)
         .toHexString()
     },

@@ -26,7 +26,7 @@ export const MainNavItems = withRouter(({ history, match }) => {
       <Link style={resetLinkStyle} to='/app/posts'>
         <ListItem button selected={isActive('/app/posts')}>
           <ListItemIcon>
-            <PostsIcon />
+            <PostsIcon color={isActive('/app/posts') ? 'secondary' : 'primary'} />
           </ListItemIcon>
           <ListItemText primary='Posts' />
         </ListItem>
@@ -34,7 +34,7 @@ export const MainNavItems = withRouter(({ history, match }) => {
       <Link style={resetLinkStyle} to='/app/liked'>
         <ListItem button selected={isActive('/app/liked')}>
           <ListItemIcon>
-            <LikesIcon />
+            <LikesIcon color={isActive('/app/liked') ? 'secondary' : 'primary'} />
           </ListItemIcon>
           <ListItemText primary='Liked posts' />
         </ListItem>
@@ -42,7 +42,7 @@ export const MainNavItems = withRouter(({ history, match }) => {
       <Link style={resetLinkStyle} to='/app/bookmarks'>
         <ListItem button selected={isActive('/app/bookmarks')}>
           <ListItemIcon>
-            <BookmarksIcon />
+            <BookmarksIcon color={isActive('/app/bookmarks') ? 'secondary' : 'primary'} />
           </ListItemIcon>
           <ListItemText primary='Bookmarks' />
         </ListItem>
@@ -50,7 +50,7 @@ export const MainNavItems = withRouter(({ history, match }) => {
       <Link style={resetLinkStyle} to='/app/users'>
         <ListItem button selected={isActive('/app/users')}>
           <ListItemIcon>
-            <PeopleIcon />
+            <PeopleIcon color={isActive('/app/users') ? 'secondary' : 'primary'} />
           </ListItemIcon>
           <ListItemText primary='Users' />
         </ListItem>
@@ -58,7 +58,7 @@ export const MainNavItems = withRouter(({ history, match }) => {
       <Link style={resetLinkStyle} to='/app/profile'>
         <ListItem button selected={isActive('/app/profile')}>
           <ListItemIcon>
-            <SettingsIcon />
+            <SettingsIcon color={isActive('/app/profile') ? 'secondary' : 'primary'} />
           </ListItemIcon>
           <ListItemText primary='Profile' />
         </ListItem>
@@ -88,7 +88,7 @@ export const SecondaryNavItems = withRouter(({ history }) => {
         selected={isActive('')}
       >
         <ListItemIcon>
-          <AllIcon />
+          <AllIcon color={isActive('') ? 'secondary' : 'primary'} />
         </ListItemIcon>
         <ListItemText primary='All Categories' />
       </ListItem>
@@ -98,31 +98,31 @@ export const SecondaryNavItems = withRouter(({ history }) => {
         selected={isActive('software')}
       >
         <ListItemIcon>
-          <CodeIcon />
+          <CodeIcon color={isActive('software') ? 'secondary' : 'primary'} />
         </ListItemIcon>
         <ListItemText primary='Software' />
       </ListItem>
       <ListItem button onClick={() => handleCategoryChange('security')} selected={isActive('security')}>
         <ListItemIcon>
-          <SecurityIcon />
+          <SecurityIcon color={isActive('security') ? 'secondary' : 'primary'} />
         </ListItemIcon>
         <ListItemText primary='Security' />
       </ListItem>
       <ListItem button onClick={() => handleCategoryChange('network')} selected={isActive('network')}>
         <ListItemIcon>
-          <NetworkIcon />
+          <NetworkIcon color={isActive('network') ? 'secondary' : 'primary'} />
         </ListItemIcon>
         <ListItemText primary='Network' />
       </ListItem>
       <ListItem button onClick={() => handleCategoryChange('AI')} selected={isActive('AI')}>
         <ListItemIcon>
-          <AIIcon />
+          <AIIcon color={isActive('AI') ? 'secondary' : 'primary'} />
         </ListItemIcon>
         <ListItemText primary='Artificial Intelligence' />
       </ListItem>
       <ListItem button onClick={() => handleCategoryChange('testing')} selected={isActive('testing')}>
         <ListItemIcon>
-          <TestingIcon />
+          <TestingIcon color={isActive('testing') ? 'secondary' : 'primary'} />
         </ListItemIcon>
         <ListItemText primary='Testing &amp; QA' />
       </ListItem>

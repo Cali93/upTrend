@@ -1,5 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { useQuery } from 'react-apollo-hooks';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,27 +13,20 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { useQuery } from 'react-apollo-hooks';
+
 import { GET_ALL_COMMENTS_BY_POST } from 'graphql/comments';
 import CommentsList from 'components/organisms/CommentsList/CommentsList';
+import LikeButton from 'components/molecules/LikeButton/LikeButton';
 
-const useStyles = makeStyles(theme => ({
-  appBar: {
-    position: 'relative'
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1
-  }
-}));
+import { usePostDetailsStyles } from './postDetails.styles';
 
 const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog ({ isOpen, toggleDialog, title, category,
-  content, author, postId }) {
-  const classes = useStyles();
+export default function PostDetails ({ isOpen, toggleDialog, title, cover, category,
+  content, author, postId, likes, commentsCount }) {
+  const classes = usePostDetailsStyles();
   const { data, loading, error } = useQuery(GET_ALL_COMMENTS_BY_POST, {
     variables: { postId }
   });
@@ -60,16 +54,35 @@ export default function FullScreenDialog ({ isOpen, toggleDialog, title, categor
             <Typography variant='h6' className={classes.title}>
               {category}
             </Typography>
-            <Button color='inherit' onClick={toggleDialog}>
-              save
-            </Button>
           </Toolbar>
         </AppBar>
-        <List>
-          <ListItem button>
+        <img src={cover} className={classes.coverImage} alt={title} />
+        <List className={classes.list}>
+          <ListItem alignItems='center'>
             <ListItemText primary={title} secondary={author} />
+            <ListItemText
+              className={classes.postActions}
+              classes={{ primary: classes.likeButtonWrapper }}
+              primary={
+                <LikeButton
+                  likes={likes}
+                  count={likes.length}
+                  postId={postId}
+                />
+              }
+              secondary={
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={toggleDialog}
+                  className={classes.addCommentBtn}
+                >
+                  Add comment
+                </Button>
+              }
+            />
           </ListItem>
-          <ListItem button>
+          <ListItem>
             <ListItemText primary={content} />
           </ListItem>
         </List>

@@ -8,23 +8,18 @@ export default gql`
     userId: Int!
   }
 
-  input LikeInput {
-    postId: Int!
-    userId: Int!
-  }
-
   type Query {
     likesCountByPostId(postId: Int!): PostLikesCountResponse!,
-    myLikes(userId: Int!): LikesResponseStatus!
+    myLikedPosts: [Post]!
   }
 
   type Mutation {
-    createLike(input: LikeInput!) : LikeResponseStatus!
-    deleteLike(bookmarkId: Int!): LikeResponseStatus!
+    toggleLikeOnPost(postId: Int!) : LikeResponseStatus!
   }
 
   type LikeResponseStatus {
     ok: Boolean!
+    isLiked: Boolean
     errors: [Error]
   }
 
@@ -32,9 +27,5 @@ export default gql`
     ok: Boolean
     count: Int
     errors: [Error]
-  }
-
-  type LikesResponseStatus {
-    posts: [Post]!
   }
 `;

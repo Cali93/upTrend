@@ -46,6 +46,7 @@ export const permissions = shield({
     getUser: isAuthenticated,
     allCommentsByPostId: isAuthenticated,
     allPosts: isAuthenticated
+    // myLikedPosts: isAuthenticated
     // allUsers: isAdmin,
     // allUsersByPostId: isAuthenticated
   },

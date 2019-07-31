@@ -4,47 +4,46 @@ const { Op } = Sequelize;
 
 export default {
   Query: {
-    myLikes: (parent, args, { models, req }) =>
-      models.Likes.findAll({
-        where: { userId: { [Op.eq]: req.session.userId } },
-        raw: true
-      }).then(bookmarks => console.log(bookmarks.getPosts())),
-    likesCountByPostId: async (parent, { postId }, { models }) => {
-      try {
-        const [ count ] = await models.Like.findAll({
-          where: { postId },
-          attributes: [[models.db.fn('COUNT', models.db.col('id')), 'count']],
-          raw: true
-        });
-        return count;
-      } catch (err) {
-        return {
-          ok: false,
-          errors: formatErrors(err, models)
-        };
-      }
+    myLikedPosts: async (parent, args, { models, req }) => {
+      console.log(req.session.userId);
+      const allPosts = await models.db.query(`
+      SELECT 
+        p.id, p.title, p.category, p."content", p.cover, p.created_at, p.updated_at,
+        p.user_id as "userId",
+        COALESCE(json_agg(distinct l.user_id)
+          FILTER(WHERE l.user_id IS NOT NULL), '[]') as likes,
+        COUNT(distinct c.user_id) as "commentsCount"
+      FROM posts as p
+      LEFT JOIN "comments" as c
+        ON p.id = c.post_id
+      LEFT JOIN likes as l
+        ON p.id = l.post_id
+      WHERE l.user_id = :current
+      GROUP BY p.id
+    `, { replacements: { current: req.session.userId }, type: models.db.QueryTypes.SELECT });
+      return allPosts;
     }
   },
   Mutation: {
-    deleteLike: async (parent, { bookmarkId }, { models }) => {
+    toggleLikeOnPost: async (parent, { postId }, { models, req }) => {
       try {
-        await models.Like.destroy({ where: { id: bookmarkId } });
-        return {
-          ok: true
-        };
-      } catch (err) {
-        return {
-          ok: false,
-          errors: formatErrors(err, models)
-        };
-      }
-    },
-    createLike: async (parent, { input }, { models }) => {
-      try {
-        await models.Like.create(input);
-        return {
-          ok: true
-        };
+        const userId = req.session.userId;
+        const likedPost = await models.Like.findOne({
+          where: { postId, userId }
+        });
+        if (likedPost) {
+          await likedPost.destroy();
+          return {
+            ok: true,
+            isLiked: false
+          };
+        } else {
+          await models.Like.create({ postId, userId });
+          return {
+            ok: true,
+            isLiked: true
+          };
+        }
       } catch (err) {
         return {
           ok: false,

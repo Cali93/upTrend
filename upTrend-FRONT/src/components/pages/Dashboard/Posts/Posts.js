@@ -20,7 +20,7 @@ const Posts = () => {
 
   const { data, error, loading } = useQuery(GET_ALL_POSTS);
 
-  if (loading || !data.allPosts) {
+  if (loading) {
     return <div />;
   }
   if (error) {

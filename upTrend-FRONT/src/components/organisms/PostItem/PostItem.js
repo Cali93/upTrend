@@ -90,7 +90,7 @@ const PostItem = ({ id, userId, title, category, content, cover, likes, comments
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
-            <LikeButton likes={likes} count={likes.length} />
+            <LikeButton postId={id} likes={likes} count={likes.length} />
             <CommentsIndicator onClick={setToggleReadDialog} postId={id} count={commentsCount} />
             {userId === currentUser && (
               <>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Grid,
-  Typography,
   Tabs,
   Tab
 } from '@material-ui/core';
@@ -21,7 +20,6 @@ const Auth = () => {
     <Grid container className={classes.container}>
       <div className={classes.logotypeContainer}>
         <img src={logo} alt='logo' className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>upTrend</Typography>
       </div>
       <div className={classes.formContainer}>
         <div className={classes.form}>

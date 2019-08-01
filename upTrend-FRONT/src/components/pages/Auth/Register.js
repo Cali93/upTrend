@@ -18,7 +18,7 @@ import cn from 'classnames';
 import { useAuthStyles } from './auth.styles';
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import { CREATE_USER } from 'graphql/auth';
-import { isEmptyObject } from 'utils/helpers';
+import { isObjectEmpty } from 'utils/helpers';
 import { genders } from 'utils/staticLists';
 import GoogleSignInButton from 'components/atoms/GoogleSignInButton/GoogleSignInButton';
 
@@ -173,7 +173,7 @@ export const Register = ({ handleTabChange }) => {
                   <CircularProgress size={26} />
                 ) : (
                   <Button
-                    disabled={!isEmptyObject(errors)}
+                    disabled={!isObjectEmpty(errors)}
                     size='large'
                     type='submit'
                     variant='contained'

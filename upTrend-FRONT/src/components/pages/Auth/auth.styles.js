@@ -27,17 +27,11 @@ export const useAuthStyles = makeStyles(theme => ({
     }
   },
   logotypeImage: {
-    width: 165,
-    marginBottom: theme.spacing(4)
-  },
-  logotypeText: {
-    color: 'white',
-    fontWeight: 500,
-    fontSize: 84,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 48
-    },
-    textShadow: '2px 2px 3px rgba(255,255,255,0.5)'
+    maxHeight: '80%',
+    marginBottom: theme.spacing(4),
+    '-webkit-box-shadow': '-1px 1px 26px 23px rgba(11,12,20,1)',
+    '-moz-box-shadow': '-1px 1px 26px 23px rgba(11,12,20,1)',
+    'box-shadow': '-1px 1px 26px 23px rgba(11,12,20,1)'
   },
   formContainer: {
     width: '40%',

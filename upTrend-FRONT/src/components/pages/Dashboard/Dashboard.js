@@ -11,6 +11,7 @@ import Posts from './Posts/Posts';
 import LikedPosts from './LikedPosts/LikedPosts';
 import Users from './Users/Users';
 import { useDashboardStyles } from './dashboard.styles';
+import Error404 from '../Error/Error404';
 
 const Dashboard = () => {
   const classes = useDashboardStyles();
@@ -23,8 +24,16 @@ const Dashboard = () => {
     <Router>
       <div className={classes.root}>
         <CssBaseline />
-        <TopToolbar isOpen={isOpen} handleToggleDrawer={handleToggleDrawer} classes={classes} />
-        <Sidebar isOpen={isOpen} handleToggleDrawer={handleToggleDrawer} classes={classes} />
+        <TopToolbar
+          isOpen={isOpen}
+          handleToggleDrawer={handleToggleDrawer}
+          classes={classes}
+        />
+        <Sidebar
+          isOpen={isOpen}
+          handleToggleDrawer={handleToggleDrawer}
+          classes={classes}
+        />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Switch>
@@ -32,6 +41,7 @@ const Dashboard = () => {
             <PrivateRoute exact path='/app/liked' component={LikedPosts} />
             <PrivateRoute exact path='/app/users' component={Users} />
             <PrivateRoute exact path='/app/profile' component={Profile} />
+            <PrivateRoute component={Error404} />
           </Switch>
         </main>
       </div>

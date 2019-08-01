@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress, Button } from '@material-ui/core';
-import { isEmptyObject } from '../../../utils/helpers';
+import { isObjectEmpty } from '../../../utils/helpers';
 import { useSubmitOrCancelStyles } from './submitOrCancel.styles';
 
 const SubmitOrCancel = ({ onSubmit, errors, loading, resetForm }) => {
@@ -20,7 +20,7 @@ const SubmitOrCancel = ({ onSubmit, errors, loading, resetForm }) => {
         <CircularProgress size={26} className={classes.loader} />
       ) : (
         <Button
-          disabled={!isEmptyObject(errors)}
+          disabled={!isObjectEmpty(errors)}
           type='submit'
           onClick={onSubmit}
           variant='contained'

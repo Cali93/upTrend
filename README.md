@@ -1,7 +1,6 @@
 # upTrend Web App
 
 ### A Web App made with:
-
 - ReactJS as a front-end SPA framework
 - Material-UI as a front-end components library following the Material Design rules
 - NodeJS and Express with GraphQL (Apollo-server-express)

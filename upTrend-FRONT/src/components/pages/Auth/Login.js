@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+
 import {
   Button,
   Typography,
@@ -10,12 +11,13 @@ import {
   Fade
 } from '@material-ui/core';
 
-import { useAuthStyles } from './auth.styles';
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import { LOGIN_USER } from 'graphql/auth';
-import { isEmptyObject } from 'utils/helpers';
+import { isObjectEmpty } from 'utils/helpers';
 import { useStoreActions } from 'easy-peasy';
 import GoogleSignInButton from 'components/atoms/GoogleSignInButton/GoogleSignInButton';
+
+import { useAuthStyles } from './auth.styles';
 
 const Login = ({ history }) => {
   const classes = useAuthStyles();
@@ -128,7 +130,7 @@ const Login = ({ history }) => {
                   />
                 ) : (
                   <Button
-                    disabled={!isEmptyObject(errors)}
+                    disabled={!isObjectEmpty(errors)}
                     type='submit'
                     onClick={onSubmit}
                     variant='contained'

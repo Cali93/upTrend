@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { Query } from 'react-apollo';
-import { GET_CURRENT_USER } from '../../../graphql/auth';
+
+import { GET_CURRENT_USER } from 'graphql/auth';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => (
   <Query query={GET_CURRENT_USER}>
@@ -12,15 +13,11 @@ export const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route
           {...rest}
           render={props =>
-            data &&
-            data.getCurrentUser &&
-            data.getCurrentUser.ok &&
-            data.getCurrentUser.user &&
             data.getCurrentUser.user.id ? (
               <Component {...props} />
-              ) : (
-                <Redirect to='/authenticate' />
-              )
+            ) : (
+              <Redirect to='/authenticate' />
+            )
           }
         />
       );

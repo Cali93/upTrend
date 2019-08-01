@@ -114,6 +114,7 @@ const PostFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode })
                       <TextFieldGroup
                         {...field}
                         form={form}
+                        multiline
                         name='content'
                         label='Content'
                         placeholder='Content'

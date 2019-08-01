@@ -63,7 +63,7 @@ const PostItem = ({ id, userId, title, category, content, cover, likes, comments
           author={userId}
         />
       )}
-      <Grid item key={id} xs={12} sm={6} md={4} lg={3}>
+      <Grid item key={id} xs={12} sm={12} md={4} lg={3}>
         <Card className={classes.card}>
           <CardMedia
             className={classes.cardCategoryBanner}
@@ -92,7 +92,7 @@ const PostItem = ({ id, userId, title, category, content, cover, likes, comments
               {sliceContent(content, 200)}
             </Typography>
           </CardContent>
-          <CardActions className={classes.cardActions}>
+          <CardActions className={classes.cardActions} disableSpacing>
             <LikeButton postId={id} likes={likes} count={likes.length} />
             <CommentsIndicator onClick={setToggleReadDialog} postId={id} count={commentsCount} />
             {userId === currentUser && (

@@ -30,6 +30,29 @@ export default {
         };
       }
     },
+    getUser: async (_parent, { userId }, { models, req }) => {
+      try {
+        const user = await models.User.scope('withoutPassword').findOne(
+          {
+            where: {
+              id: {
+                [Op.eq]: userId
+              }
+            },
+            raw: true
+          }
+        );
+        return {
+          ok: true,
+          user
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
+    },
     allUsers: (parent, args, { models }) => models.User.findAll({
       raw: true,
       order: [

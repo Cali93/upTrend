@@ -9,6 +9,7 @@ export const TextFieldGroup = ({
   name,
   type,
   disabled,
+  multiline,
   required,
   form,
   field,
@@ -31,6 +32,7 @@ export const TextFieldGroup = ({
         placeholder={placeholder}
         margin='normal'
         disabled={disabled}
+        multiline={multiline}
         type={type}
         hidden={hidden}
         error={error && touched}

@@ -18,6 +18,7 @@ export default {
         LEFT JOIN likes as l
           ON p.id = l.post_id
         GROUP BY p.id
+        ORDER BY p.created_at DESC
       `, { type: models.db.QueryTypes.SELECT });
       return allPosts;
     }

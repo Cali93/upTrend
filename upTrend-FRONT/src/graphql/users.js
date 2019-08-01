@@ -1,5 +1,26 @@
 import gql from 'graphql-tag';
 
+export const GET_USER = gql`
+  query($userId: Int!) {
+    getUser(userId: $userId) {
+      ok
+      user {
+        id
+        firstName
+        lastName
+        gender
+        avatar
+        role
+        postId
+        email
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
 export const GET_ALL_USERS = gql`
   query {
     allUsers {

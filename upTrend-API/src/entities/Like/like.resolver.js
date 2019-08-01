@@ -20,6 +20,7 @@ export default {
         ON p.id = l.post_id
       WHERE l.user_id = :current
       GROUP BY p.id
+      ORDER BY p.created_at DESC
     `, { replacements: { current: req.session.userId }, type: models.db.QueryTypes.SELECT });
       return allPosts;
     }

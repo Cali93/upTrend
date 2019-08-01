@@ -14,6 +14,7 @@ export default gql`
   }
 
   type Query {
+    getUser(userId: Int!): UserResponse!
     getCurrentUser: UserResponse!
     allUsers: [User!]!
     allUsersByPostId(postId: Int!): [User!]!

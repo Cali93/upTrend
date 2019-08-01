@@ -9,6 +9,10 @@ export const usePostDetailsStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     flex: 1
   },
+  toolBar: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   list: {
     width: '100%'
   },

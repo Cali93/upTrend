@@ -34,7 +34,7 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
       },
       raw: true
     }).then(post =>
-      post.id === args.postId || args.input.postId
+      post.id === (args.postId || args.input.postId)
     );
   } else {
     return false;
@@ -43,6 +43,7 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
 
 export const permissions = shield({
   Query: {
+    getUser: isAuthenticated,
     getCurrentUser: isAuthenticated,
     allCommentsByPostId: isAuthenticated,
     allPosts: isAuthenticated

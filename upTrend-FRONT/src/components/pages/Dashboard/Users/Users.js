@@ -22,19 +22,25 @@ import {
 } from '@material-ui/icons/';
 
 import { useUserStyles } from './user.styles';
-import { GET_ALL_USERS, DELETE_USER } from 'graphql/users';
+import { GET_ALL_USERS, DELETE_USER, CREATE_USER, UPDATE_USER } from 'graphql/users';
 import ConfirmPopover from 'components/molecules/ConfirmPopover/ConfirmPopover';
-import EditUserDialog from './EditUserDialog';
-import CreateUserDialog from './CreateUserDialog';
 import { renderGender } from 'utils/helpers';
+import UserFormDialog from 'components/templates/UserForm/UserForm';
+import useToggle from 'utils/hooks/useToggle';
 
 const Users = () => {
   const classes = useUserStyles();
-  const [isEditDialogOpen, setToggleEditDialog] = useState(false);
-  const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
+  const {
+    isOpen: isCreateDialogOpen,
+    handleToggle: setToggleCreateDialog
+  } = useToggle();
+  const {
+    isOpen: isEditDialogOpen,
+    handleToggle: setToggleEditDialog
+  } = useToggle();
+
   const [user, setUser] = useState({
     userId: null,
-    postId: null,
     firstName: '',
     lastName: '',
     email: '',
@@ -49,11 +55,7 @@ const Users = () => {
   const handleEditUser = (user) => {
     const { __typename, ...userFields } = user;
     setUser(userFields);
-    setToggleEditDialog(prevState => !prevState);
-  };
-
-  const handleCreateUser = () => {
-    setToggleCreateDialog(prevState => !prevState);
+    setToggleEditDialog();
   };
 
   if (loading) {
@@ -91,9 +93,9 @@ const Users = () => {
                   <Button
                     variant='contained'
                     color='primary'
-                    onClick={handleCreateUser}
+                    onClick={setToggleCreateDialog}
                   >
-                    Create an user
+                    Create a user
                   </Button>
                 </Grid>
               </Grid>
@@ -102,16 +104,27 @@ const Users = () => {
         </Container>
       </div>
       {isAdmin && isCreateDialogOpen && (
-        <CreateUserDialog
+        <UserFormDialog
           isOpen={isCreateDialogOpen}
-          toggleDialog={handleCreateUser}
+          mutation={CREATE_USER}
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            role: '',
+            email: '',
+            avatar: '',
+            gender: ''
+          }}
+          toggleDialog={setToggleCreateDialog}
         />
       )}
       {isAdmin && isEditDialogOpen && (
-        <EditUserDialog
+        <UserFormDialog
+          mode='edit'
+          mutation={UPDATE_USER}
           isOpen={isEditDialogOpen}
-          toggleDialog={() => setToggleEditDialog()}
-          user={user}
+          toggleDialog={setToggleEditDialog}
+          initialValues={user}
         />
       )}
       <Container className={classes.cardGrid} maxWidth='md'>

@@ -10,9 +10,6 @@ export const GET_USER = gql`
         lastName
         gender
         avatar
-        role
-        postId
-        email
       }
       errors {
         path
@@ -29,27 +26,12 @@ export const GET_ALL_USERS = gql`
       lastName
       gender
       role
-      postId
       avatar
       email
     }
   }
 `;
 
-export const GET_ALL_USERS_BY_POST = gql`
-  query($postId: Int!) {
-    allUsersByPostId(postId: $postId) {
-      id
-      firstName
-      lastName
-      gender
-      role
-      postId
-      avatar
-      email
-    }
-  }
-`;
 export const DELETE_USER = gql`
   mutation($id: Int!) {
     deleteUser(id: $id) {
@@ -72,7 +54,6 @@ export const UPDATE_USER = gql`
         lastName
         gender
         role
-        postId
         avatar
         email
       }

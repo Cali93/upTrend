@@ -15,11 +15,12 @@ import {
 
 import { TextFieldGroup } from 'components/molecules/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from 'components/organisms/SubmitOrCancel/SubmitOrCancel';
-import { genders, roles } from 'utils/staticLists';
-import { GET_ALL_USERS, CREATE_USER } from 'graphql/users';
+import { DialogTitle } from 'components/templates/DialogTitle/DialogTitle';
+import { roles, genders } from 'utils/staticLists';
+import { GET_ALL_USERS } from 'graphql/users';
 
-const CreateUserDialog = ({ isOpen, toggleDialog }) => {
-  const [createError, setCreateError] = useState(false);
+const UserFormDialog = ({ isOpen, toggleDialog, initialValues, mutation, mode }) => {
+  const [mutationError, setMutationError] = useState(false);
 
   const validateFields = Yup.object().shape({
     firstName: Yup.string().required('First Name is required'),
@@ -32,33 +33,37 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
       .required('Email is required')
   });
 
-  const onSubmit = async (fields, form, createUser) => {
-    if (createUser) {
+  const onSubmit = async ({ id, ...fields }, form, mutateUser) => {
+    const createOrEditUser = mode === 'edit' ? 'updateUser' : 'createUser';
+    if (mutateUser) {
       try {
-        const createUserResponse = await createUser({
+        const mutateUserResponse = await mutateUser({
           variables: {
             input: {
+              userId: id,
               ...fields
             }
           },
           refetchQueries: [{ query: GET_ALL_USERS }]
         });
-        const { data } = createUserResponse;
-        const hasData = data && data.createUser;
-        const isCreateOk = hasData && data.createUser.ok;
-        const hasCreateErrors =
-          hasData && data.createUser.errors && data.createUser.errors.length > 0;
+        const { data } = mutateUserResponse;
+        const hasData = data && data[createOrEditUser];
+        const isMutationOk = hasData && data[createOrEditUser].ok;
+        const hasMutationErrors =
+          hasData &&
+          data[createOrEditUser].errors &&
+          data[createOrEditUser].errors.length > 0;
 
-        if (hasCreateErrors || !isCreateOk) {
-          return setCreateError(true);
+        if (hasMutationErrors || !isMutationOk) {
+          return setMutationError(true);
         }
 
-        if (isCreateOk) {
+        if (isMutationOk) {
           form.resetForm();
           return toggleDialog();
         }
       } catch (err) {
-        return setCreateError(true);
+        return setMutationError(true);
       }
     }
   };
@@ -66,29 +71,25 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
     <Dialog
       open={isOpen}
       onClose={toggleDialog}
-      aria-labelledby='create-user-dialog'
+      fullWidth
+      aria-labelledby='user-dialog-title'
     >
-      <DialogContent>
-        <Mutation mutation={CREATE_USER}>
-          {(createUser, { loading }) => (
+      <DialogTitle id='user-dialog-title' onClose={toggleDialog}>
+        {mode} user
+      </DialogTitle>
+      <DialogContent dividers>
+        <Mutation mutation={mutation}>
+          {(mutate, { loading }) => (
             <Formik
-              initialValues={{
-                firstName: '',
-                lastName: '',
-                role: '',
-                email: '',
-                avatar: '',
-                gender: ''
-              }}
+              initialValues={initialValues}
               validationSchema={validateFields}
-              onSubmit={(fields, form) => onSubmit(fields, form, createUser)}
+              onSubmit={(fields, form) => onSubmit(fields, form, mutate)}
               render={({ errors, touched, handleSubmit, handleReset }) => (
                 <Form onSubmit={handleSubmit}>
-                  <Typography variant='h3'>Create user</Typography>
-                  {createError && (
-                    <Fade in={createError}>
+                  {mutationError && (
+                    <Fade in={mutationError}>
                       <Typography color='error'>
-                        Something went wrong while updating this user :(
+                        Something went wrong while saving this user :(
                       </Typography>
                     </Fade>
                   )}
@@ -200,7 +201,6 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
                         name='avatar'
                         label='Avatar'
                         placeholder='Avatar'
-                        required
                       />
                     )}
                   />
@@ -222,4 +222,8 @@ const CreateUserDialog = ({ isOpen, toggleDialog }) => {
   );
 };
 
-export default CreateUserDialog;
+UserFormDialog.defaultProps = {
+  mode: 'create'
+};
+
+export default UserFormDialog;

@@ -31,7 +31,7 @@ export default gql`
 
   enum RoleEnum {
     admin
-    manager
+    moderator
     user
   }
 
@@ -65,7 +65,6 @@ export default gql`
     role: RoleEnum
     avatar: String
     gender: String
-    postId: Int!
     email: String!
   }
 
@@ -76,7 +75,6 @@ export default gql`
     lastName: String
     avatar: String
     gender: String
-    postId: Int
     email: String
   }
 `;

@@ -25,8 +25,8 @@ export const initGoogleStrategy = async passport => passport.use(
         if (email === API_CONFIG.api.projectOwnerEmail) {
           mockRole = 'admin';
         }
-        if (email.includes('manager')) {
-          mockRole = 'manager';
+        if (email.includes('moderator')) {
+          mockRole = 'moderator';
         }
         return models.db.transaction(transaction =>
           models.User.findOrCreate({

@@ -11,7 +11,6 @@ export const GET_CURRENT_USER = gql`
         gender
         avatar
         role
-        postId
         email
       }
       errors {
@@ -32,7 +31,6 @@ export const LOGIN_USER = gql`
         lastName
         gender
         avatar
-        postId
         role
         email
       }

@@ -8,8 +8,8 @@ export const user = {
   }),
   logout: action((state, logoutMutation) => {
     logoutMutation();
-    window.location.replace('/authenticate');
     state.user = {};
+    window.location.replace('/authenticate');
     return state;
   }),
   setUser: action((state, payload) => {

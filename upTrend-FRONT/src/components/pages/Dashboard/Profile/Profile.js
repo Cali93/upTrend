@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
+import { useStoreState } from 'easy-peasy';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -12,23 +13,22 @@ import Container from '@material-ui/core/Container';
 import SeeIcon from '@material-ui/icons/RemoveRedEye';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { useUserStyles } from '../Users/user.styles';
-import EditUserDialog from '../Users/EditUserDialog';
-import { useStoreState } from 'easy-peasy';
+import UserFormDialog from 'components/templates/UserForm/UserForm';
 import { renderGender } from 'utils/helpers';
+
+import { useUserStyles } from '../Users/user.styles';
+import useToggle from 'utils/hooks/useToggle';
+import { UPDATE_USER } from 'graphql/users';
 
 const Profile = () => {
   const classes = useUserStyles();
   const user = useStoreState(state => state.user.user);
   const { __typename, ...userFields } = user;
-  const [isEditDialogOpen, setToggleEditDialog] = useState(false);
+  const {
+    isOpen: isEditDialogOpen,
+    handleToggle: setToggleEditDialog
+  } = useToggle();
 
-  const handleEditUser = useCallback(
-    () => {
-      setToggleEditDialog(!isEditDialogOpen);
-    },
-    [isEditDialogOpen]
-  );
   const userAvatar =
   user.avatar || 'https://source.unsplash.com/random/400x200';
 
@@ -36,11 +36,12 @@ const Profile = () => {
     <div>
       <CssBaseline />
       {isEditDialogOpen && (
-        <EditUserDialog
+        <UserFormDialog
           isOpen={isEditDialogOpen}
-          profileMode
-          toggleDialog={() => setToggleEditDialog()}
-          user={userFields}
+          mutation={UPDATE_USER}
+          mode='edit'
+          toggleDialog={setToggleEditDialog}
+          initialValues={userFields}
         />
       )}
       <Container className={classes.cardGrid} maxWidth='md'>
@@ -69,7 +70,7 @@ const Profile = () => {
                 <Button size='small' color='primary'>
                   <SeeIcon color='primary' />
                 </Button>
-                <Button size='small' onClick={handleEditUser}>
+                <Button size='small' onClick={setToggleEditDialog}>
                   <EditIcon color='secondary' />
                 </Button>
               </CardActions>

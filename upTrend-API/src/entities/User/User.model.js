@@ -37,7 +37,7 @@ export default (db, DataTypes) => {
         }
       },
       role: {
-        type: DataTypes.ENUM('admin', 'manager', 'user'),
+        type: DataTypes.ENUM('admin', 'moderator', 'user'),
         field: 'role',
         defaultValue: 'user'
       }

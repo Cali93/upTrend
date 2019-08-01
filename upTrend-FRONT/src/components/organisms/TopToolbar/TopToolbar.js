@@ -1,5 +1,7 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -11,7 +13,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import LogoutButton from 'components/molecules/LogoutButton/LogoutButton';
 import SearchInput from 'components/molecules/SearchInput/SearchInput';
 
-const TopToolbar = ({ classes, isOpen, handleToggleDrawer }) => {
+const TopToolbar = ({ classes, isOpen, handleToggleDrawer, history }) => {
+  const isOnPosts =
+    history.location.pathname.includes('/app/posts') ||
+    history.location.pathname.includes('/app/liked');
   return (
     <AppBar
       position='absolute'
@@ -39,7 +44,7 @@ const TopToolbar = ({ classes, isOpen, handleToggleDrawer }) => {
         >
           upTrend
         </Typography>
-        <SearchInput />
+        {isOnPosts && <SearchInput />}
         <div>
           <LogoutButton />
           <IconButton color='inherit'>
@@ -53,4 +58,4 @@ const TopToolbar = ({ classes, isOpen, handleToggleDrawer }) => {
   );
 };
 
-export default TopToolbar;
+export default withRouter(TopToolbar);

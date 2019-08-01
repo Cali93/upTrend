@@ -97,6 +97,7 @@ const PostItem = ({
             }
           />
           <CardMedia
+            onClick={setToggleReadDialog}
             className={classes.cardMedia}
             image={cover}
             title={title}

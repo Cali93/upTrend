@@ -1,14 +1,14 @@
 import { action } from 'easy-peasy';
 
 export const posts = {
-  posts: [],
   selectedCategory: '',
+  searchQuery: '',
   setCategoryToBrowse: action((state, category) => {
     state.selectedCategory = category;
     return state;
   }),
-  setPosts: action((state, payload) => {
-    state.posts = payload;
+  setSearchQuery: action((state, searchQuery) => {
+    state.searchQuery = searchQuery.toLowerCase();
     return state;
   })
 };

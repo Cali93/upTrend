@@ -40,7 +40,7 @@ const Error404 = () => {
           variant='contained'
           color='primary'
           component={Link}
-          to='/app/estates'
+          to='/app/posts'
           size='large'
           className={classes.backButton}
         >

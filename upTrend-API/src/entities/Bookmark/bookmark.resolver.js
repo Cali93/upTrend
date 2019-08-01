@@ -8,7 +8,7 @@ export default {
       models.Bookmarks.findAll({
         where: { userId: { [Op.eq]: req.session.userId } },
         raw: true
-      }).then(bookmarks => console.log(bookmarks.getPosts()))
+      })
   },
   Mutation: {
     deleteBookmark: async (parent, { bookmarkId }, { models }) => {

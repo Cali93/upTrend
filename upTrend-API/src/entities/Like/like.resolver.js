@@ -8,8 +8,8 @@ export default {
       console.log(req.session.userId);
       const allPosts = await models.db.query(`
       SELECT 
-        p.id, p.title, p.category, p."content", p.cover, p.created_at, p.updated_at,
-        p.user_id as "userId",
+        p.id, p.title, p.category, p."content", p.cover, p.user_id as "userId",
+        p.created_at as "createdAt", p.updated_at as "updatedAt",
         COALESCE(json_agg(distinct l.user_id)
           FILTER(WHERE l.user_id IS NOT NULL), '[]') as likes,
         COUNT(distinct c.user_id) as "commentsCount"

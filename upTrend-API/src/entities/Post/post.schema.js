@@ -11,6 +11,8 @@ export default gql`
     userId: Int!
     commentsCount: Int
     likes: [Int]
+    createdAt: String
+    updatedAt: String
   }
 
   input CreatePostInput {

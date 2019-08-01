@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Moment from 'react-moment';
+import { useStoreState } from 'easy-peasy';
+
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
+import {
+  Button,
+  Avatar,
+  Typography,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemSecondaryAction,
+  Divider
+} from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+
+import DeleteButton from 'components/molecules/DeleteButton/DeleteButton';
+import { DELETE_COMMENT, GET_ALL_COMMENTS_BY_POST, UPDATE_COMMENT } from 'graphql/comments';
+import { GET_ALL_POSTS } from 'graphql/posts';
+import useToggle from 'utils/hooks/useToggle';
+import CommentFormDialog from 'components/templates/CommentForm/CommentForm';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,8 +32,44 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CommentsList ({ comments }) {
+export default function CommentsList ({ comments, postId }) {
   const classes = useStyles();
+  const currentUserId = useStoreState(state => state.user.user.id);
+
+  const [editingComment, setEditingComment] = useState({
+    commentId: null,
+    title: '',
+    content: ''
+  });
+
+  const {
+    isOpen: isEditDialogOpen,
+    handleToggle: setToggleEditDialog
+  } = useToggle();
+
+  const handleEditComment = (commentId, title, content) => {
+    setEditingComment({ commentId, title, content });
+    setToggleEditDialog();
+  };
+
+  const onDelete = (proxy, { data }) => {
+    const cacheData = proxy.readQuery({ query: GET_ALL_POSTS });
+    try {
+      if (data.deleteComment.ok) {
+        const allPosts = cacheData.allPosts.map(post => {
+          return post.id !== postId
+            ? post
+            : {
+              ...post,
+              commentsCount: post.commentsCount - 1
+            };
+        });
+        return proxy.writeQuery({ query: GET_ALL_POSTS, data: { allPosts } });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <List className={classes.root}>
@@ -43,7 +93,10 @@ export default function CommentsList ({ comments }) {
                       variant='body2'
                       color='textPrimary'
                     >
-                    By {fullName}
+                      By {fullName} - &nbsp;
+                      <Moment format='DD/MM/YYYY HH:mm'>
+                        {comment.createdAt}
+                      </Moment>
                     </Typography>
                     <Typography
                       display='block'
@@ -56,11 +109,44 @@ export default function CommentsList ({ comments }) {
                   </React.Fragment>
                 }
               />
+              <ListItemSecondaryAction>
+                {comment.userId === currentUserId && (
+                  <Button
+                    size='small'
+                    onClick={() =>
+                      handleEditComment(comment.id, comment.title, comment.content)
+                    }
+                  >
+                    <EditIcon color='secondary' />
+                  </Button>
+                )}
+                {comment.userId === currentUserId && (
+                  <DeleteButton
+                    actionTitle='Delete comment'
+                    mutation={DELETE_COMMENT}
+                    variables={{
+                      commentId: comment.id
+                    }}
+                    update={onDelete}
+                    refetchQueries={[{ query: GET_ALL_COMMENTS_BY_POST, variables: { postId } }]}
+                  />
+                )}
+              </ListItemSecondaryAction>
             </ListItem>
             <Divider variant='inset' component='li' />
           </div>
         );
       })}
+      {isEditDialogOpen && (
+        <CommentFormDialog
+          mode='edit'
+          postId={postId}
+          initialValues={editingComment}
+          mutation={UPDATE_COMMENT}
+          isOpen={isEditDialogOpen}
+          toggleDialog={setToggleEditDialog}
+        />
+      )}
     </List>
   );
 }

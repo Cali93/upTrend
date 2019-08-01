@@ -29,7 +29,7 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.Post.findOne({
       where: {
-        id: { [Op.eq]: args.postId || args.input.postId },
+        id: { [Op.eq]: (args.postId || args.input.postId) },
         userId: { [Op.eq]: req.session.userId }
       },
       raw: true
@@ -41,25 +41,40 @@ const isPostOwner = rule()(async (parent, args, { models, req }, info) => {
   }
 });
 
+const isCommentOwner = rule()(async (parent, args, { models, req }, info) => {
+  if (req.session && req.session.userId) {
+    return models.Comment.findOne({
+      where: {
+        id: { [Op.eq]: (args.commentId || args.input.commentId) },
+        userId: { [Op.eq]: req.session.userId }
+      },
+      raw: true
+    }).then(comment =>
+      comment.id === (args.commentId || args.input.commentId)
+    );
+  } else {
+    return false;
+  }
+});
+
 export const permissions = shield({
   Query: {
     getUser: isAuthenticated,
     getCurrentUser: isAuthenticated,
     allCommentsByPostId: isAuthenticated,
-    allPosts: isAuthenticated
-    // myLikedPosts: isAuthenticated
-    // allUsers: isAdmin,
-    // allUsersByPostId: isAuthenticated
+    allPosts: isAuthenticated,
+    myLikedPosts: isAuthenticated,
+    allUsers: isAuthenticated
   },
   Mutation: {
-    // createEstate: isAdminOrManager,
-    // updateEstate: or(isAdmin, and(isManager, estatebelongsToSamePost)),
-    // deleteEstate: or(isAdmin, and(isManager, estatebelongsToSamePost)),
+    createComment: isAuthenticated,
+    updateComment: isCommentOwner,
+    deleteComment: isCommentOwner,
     createPost: isAuthenticated,
     updatePost: isPostOwner,
-    deletePost: isPostOwner
-    // createUser: isAdminOrManager,
-    // updateUser: or(isAdminOrOwner, and(isManager, userbelongsToSamePost)),
-    // deleteUser: or(isAdmin, and(isManager, userbelongsToSamePost))
+    deletePost: isPostOwner,
+    createUser: isAdmin,
+    updateUser: isAdmin,
+    deleteUser: isAdmin
   }
 });

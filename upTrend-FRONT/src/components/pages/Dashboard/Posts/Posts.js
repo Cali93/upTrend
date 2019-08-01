@@ -31,7 +31,7 @@ const Posts = () => {
       <HeroContainer
         id='posts-section'
         title='Posts'
-        description='You can browse through all our posts accross the world.'
+        description='You can browse through our posts accross all categories.'
         heroButtons={
           <Grid item>
             <Button

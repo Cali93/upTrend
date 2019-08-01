@@ -16,20 +16,25 @@ import {
 import IconButton from '@material-ui/core/IconButton';
 import GoBackIcon from '@material-ui/icons/ArrowBack';
 
-import { GET_ALL_COMMENTS_BY_POST } from 'graphql/comments';
+import useToggle from 'utils/hooks/useToggle';
+import { GET_ALL_COMMENTS_BY_POST, CREATE_COMMENT } from 'graphql/comments';
 import CommentsList from 'components/organisms/CommentsList/CommentsList';
 import LikeButton from 'components/molecules/LikeButton/LikeButton';
 import AuthorItem from 'components/molecules/AuthorItem/AuthorItem';
 import { Transition } from 'components/atoms/Transition/Transition';
 
 import { usePostDetailsStyles } from './postDetails.styles';
+import CommentFormDialog from '../CommentForm/CommentForm';
+import Moment from 'react-moment';
 
 export default function PostDetails ({ isOpen, toggleDialog, title, cover, category,
-  content, author, postId, likes, commentsCount }) {
+  content, author, postId, likes, commentsCount, createdAt }) {
   const classes = usePostDetailsStyles();
   const { data, loading, error } = useQuery(GET_ALL_COMMENTS_BY_POST, {
     variables: { postId }
   });
+  const { isOpen: isCreateDialogOpen, handleToggle: setToggleCreateDialog } = useToggle();
+
   if (loading) return <div />;
   if (error) return <h4>Oops, an error has occured</h4>;
 
@@ -52,6 +57,12 @@ export default function PostDetails ({ isOpen, toggleDialog, title, cover, categ
               <GoBackIcon />
             </IconButton>
             <Chip label={category.toUpperCase()} />
+
+            <Chip label={
+              <Moment format='DD/MM/YYYY HH:mm'>
+                {Number(createdAt)}
+              </Moment>
+            } />
           </Toolbar>
         </AppBar>
         <img src={cover} className={classes.coverImage} alt={title} />
@@ -72,7 +83,7 @@ export default function PostDetails ({ isOpen, toggleDialog, title, cover, categ
                 <Button
                   variant='outlined'
                   color='secondary'
-                  onClick={toggleDialog}
+                  onClick={setToggleCreateDialog}
                   className={classes.addCommentBtn}
                 >
                   Add comment
@@ -85,7 +96,20 @@ export default function PostDetails ({ isOpen, toggleDialog, title, cover, categ
           </ListItem>
         </List>
         <Divider />
-        <CommentsList comments={data.allCommentsByPostId.comments} />
+        <CommentsList comments={data.allCommentsByPostId.comments} postId={postId} />
+        {isCreateDialogOpen && (
+          <CommentFormDialog
+            initialValues={{
+              postId,
+              title: '',
+              content: ''
+            }}
+            postId={postId}
+            mutation={CREATE_COMMENT}
+            isOpen={isCreateDialogOpen}
+            toggleDialog={setToggleCreateDialog}
+          />
+        )}
       </Dialog>
     </Card>
   );

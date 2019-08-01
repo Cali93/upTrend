@@ -14,16 +14,32 @@ import useToggle from 'utils/hooks/useToggle';
 import PostDetails from 'components/templates/PostDetails/PostDetails';
 import DeleteButton from 'components/molecules/DeleteButton/DeleteButton';
 import CommentsIndicator from 'components/molecules/CommentsIndicator/CommentsIndicator';
-
-import PostFormDialog from '../../templates/PostForm/PostFormDialog';
-import { usePostStyles } from './post.styles';
 import LikeButton from 'components/molecules/LikeButton/LikeButton';
+import PostFormDialog from 'components/templates/PostForm/PostFormDialog';
 
-const PostItem = ({ id, userId, title, category, content, cover, likes, commentsCount }) => {
+import { usePostStyles } from './post.styles';
+
+const PostItem = ({
+  id,
+  userId,
+  title,
+  category,
+  content,
+  cover,
+  likes,
+  commentsCount,
+  createdAt
+}) => {
   const classes = usePostStyles();
   const currentUser = useStoreState(state => state.user.user.id);
-  const { isOpen: isEditDialogOpen, handleToggle: setToggleEditDialog } = useToggle();
-  const { isOpen: isReadDialogOpen, handleToggle: setToggleReadDialog } = useToggle();
+  const {
+    isOpen: isReadDialogOpen,
+    handleToggle: setToggleReadDialog
+  } = useToggle();
+  const {
+    isOpen: isEditDialogOpen,
+    handleToggle: setToggleEditDialog
+  } = useToggle();
 
   const [post, setPost] = useState({
     postId: null,
@@ -61,6 +77,7 @@ const PostItem = ({ id, userId, title, category, content, cover, likes, comments
           content={content}
           postId={id}
           author={userId}
+          createdAt={createdAt}
         />
       )}
       <Grid item key={id} xs={12} sm={12} md={4} lg={3}>
@@ -94,7 +111,11 @@ const PostItem = ({ id, userId, title, category, content, cover, likes, comments
           </CardContent>
           <CardActions className={classes.cardActions} disableSpacing>
             <LikeButton postId={id} likes={likes} count={likes.length} />
-            <CommentsIndicator onClick={setToggleReadDialog} postId={id} count={commentsCount} />
+            <CommentsIndicator
+              onClick={setToggleReadDialog}
+              postId={id}
+              count={commentsCount}
+            />
             {userId === currentUser && (
               <>
                 <Button

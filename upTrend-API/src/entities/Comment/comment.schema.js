@@ -6,8 +6,8 @@ export default gql`
     id: Int!
     title: String!
     content: String!
-    positiveVotes: [Int!]!
-    negativeVotes: [Int!]!
+    positiveVotes: [Int]
+    negativeVotes: [Int]
     userId: Int!
     postId: Int!
     User: UserComment!

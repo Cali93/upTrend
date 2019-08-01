@@ -11,23 +11,8 @@ export const GET_ALL_POSTS = gql`
       likes
       cover
       userId
-    }
-  }
-`;
-
-export const GET_ALL_POSTS_WITH_DETAILS = gql`
-  query {
-    allPostsWithDetails {
-      posts {
-        id
-        title
-        category
-        content
-        comments
-        likes
-        cover
-        userId
-      }
+      createdAt
+      updatedAt
     }
   }
 `;

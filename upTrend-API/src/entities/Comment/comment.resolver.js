@@ -111,9 +111,9 @@ export default {
         };
       }
     },
-    createComment: async (parent, { input }, { models }) => {
+    createComment: async (parent, { input }, { models, req }) => {
       try {
-        await models.Comment.create(input);
+        await models.Comment.create({ userId: req.session.userId, ...input });
         return {
           ok: true
         };

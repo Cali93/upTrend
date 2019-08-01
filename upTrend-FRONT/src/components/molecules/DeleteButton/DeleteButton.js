@@ -5,7 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import ConfirmPopover from '../ConfirmPopover/ConfirmPopover';
 
-const DeleteButton = ({ actionTitle, mutation, variables, refetchQueries }) => {
+const DeleteButton = ({ actionTitle, mutation, ...mutationOptions }) => {
   return (
     <Mutation mutation={mutation}>
       {mutate => (
@@ -13,8 +13,7 @@ const DeleteButton = ({ actionTitle, mutation, variables, refetchQueries }) => {
           confirmAction={actionTitle}
           onConfirmation={() =>
             mutate({
-              variables,
-              refetchQueries
+              ...mutationOptions
             })
           }
         >
@@ -23,6 +22,10 @@ const DeleteButton = ({ actionTitle, mutation, variables, refetchQueries }) => {
       )}
     </Mutation>
   );
+};
+
+DeleteButton.defaultProps = {
+  update: null
 };
 
 export default DeleteButton;

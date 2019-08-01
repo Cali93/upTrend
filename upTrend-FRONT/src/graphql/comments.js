@@ -32,8 +32,8 @@ export const GET_COMMENTS_COUNT_BY_POST = gql`
 `;
 
 export const DELETE_COMMENT = gql`
-  mutation($id: Int!) {
-    deleteComment(id: $id) {
+  mutation($commentId: Int!) {
+    deleteComment(commentId: $commentId) {
       ok
       errors {
         path
